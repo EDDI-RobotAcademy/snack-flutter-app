@@ -15,7 +15,7 @@ class KakaoLoginPage extends StatelessWidget {
           // 헝글 로고 이미지
           Center(
             child: Image.asset(
-              'assets/images/hungle_app_logo.png', // ✅ 헝글 로고 경로
+              'assets/images/hungle_app_logo.png', //
               width: 180, // 로고 크기 조절
             ),
           ),

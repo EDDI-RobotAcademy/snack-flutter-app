@@ -75,16 +75,14 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
           quill.FlutterQuillLocalizations.delegate,
         ],
         supportedLocales: [
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
-        home: KakaoLoginPage(), // ✅ 카카오 로그인 페이지로 설정
+        home: KakaoLoginPage(),
       ),
     );
   }
 }
-
