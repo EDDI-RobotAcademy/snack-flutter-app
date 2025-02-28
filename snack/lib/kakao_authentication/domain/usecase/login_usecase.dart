@@ -1,3 +1,3 @@
 abstract class LoginUseCase {
-  Future<String?> execute();
+  Future<String> execute();
 }

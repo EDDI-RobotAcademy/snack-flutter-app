@@ -7,7 +7,17 @@ class RequestUserTokenUseCaseImpl implements RequestUserTokenUseCase {
   RequestUserTokenUseCaseImpl(this.repository);
 
   @override
-  Future<String?> execute(String accessToken, String email, String nickname) async {
-    return await repository.requestUserToken(accessToken, email, nickname);
+  Future<String> execute(
+      String accessToken, String email, String nickname) async {
+    try {
+      // Django 서버로 요청하여 User Token 반환
+      final userToken =
+      await repository.requestUserToken(accessToken, email, nickname);
+      print("User token obtained: $userToken");
+      return userToken;
+    } catch (error) {
+      print("Error while requesting user token: $error");
+      throw Exception('Failed to request user token: $error');
+    }
   }
 }

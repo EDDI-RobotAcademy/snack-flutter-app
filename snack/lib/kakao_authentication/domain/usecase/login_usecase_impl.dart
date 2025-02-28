@@ -7,7 +7,8 @@ class LoginUseCaseImpl implements LoginUseCase {
   LoginUseCaseImpl(this.repository);
 
   @override
-  Future<String?> execute() async {
+  Future<String> execute() async {
+    print("LoginUseCaseImpl execute()");
     return await repository.login();
   }
 }

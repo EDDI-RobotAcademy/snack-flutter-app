@@ -9,7 +9,7 @@ class FetchUserInfoUseCaseImpl implements FetchUserInfoUseCase {
   FetchUserInfoUseCaseImpl(this.repository);
 
   @override
-  Future<Map<String, dynamic>?> execute(String accessToken) async {
-    return await repository.fetchUserInfo(accessToken);
+  Future<User> execute() async {
+    return await repository.fetchUserInfo();
   }
 }
