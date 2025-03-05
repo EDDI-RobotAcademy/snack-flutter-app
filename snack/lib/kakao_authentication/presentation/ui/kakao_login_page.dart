@@ -14,10 +14,13 @@ class KakaoLoginPage extends StatelessWidget {
 
           // 헝글 로고 이미지
           Center(
-            child: Image.asset(
-              'assets/images/hungle_app_logo.png', //
-              width: 180, // 로고 크기 조절
-            ),
+            child: Transform.translate(
+                offset: Offset(0, -20),
+                child: Image.asset(
+                  'assets/images/hungle_app_logo.png', //
+                  width: 180, // 로고 크기 조절
+              ),
+            )
           ),
 
           SizedBox(height: 50), // 로고 아래 여백
