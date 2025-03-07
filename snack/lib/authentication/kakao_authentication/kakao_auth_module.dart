@@ -1,5 +1,5 @@
-import 'package:snack/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
-import 'package:snack/kakao_authentication/presentation/ui/kakao_login_page.dart';
+import 'package:snack/authentication/presentation/providers/kakao_auth_providers.dart';
+import 'package:snack/authentication/presentation/ui/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +37,7 @@ class KakaoAuthModule {
           ),
         ),
       ],
-      child: KakaoLoginPage()
+      child: LoginPage()
     );
   }
 }
