@@ -5,14 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 
-import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
-import 'kakao_authentication/domain/usecase/login_usecase_impl.dart';
-import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
-import 'kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
-import 'kakao_authentication/infrasturcture/repository/kakao_auth_repository.dart';
-import 'kakao_authentication/infrasturcture/repository/kakao_auth_repository_impl.dart';
-import 'kakao_authentication/presentation/providers/kakao_auth_providers.dart';
-import 'kakao_authentication/presentation/ui/kakao_login_page.dart';
+import 'authentication/kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
+import 'authentication/kakao_authentication/domain/usecase/login_usecase_impl.dart';
+import 'authentication/kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
+import 'authentication/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'authentication/kakao_authentication/infrasturcture/repository/kakao_auth_repository.dart';
+import 'authentication/kakao_authentication/infrasturcture/repository/kakao_auth_repository_impl.dart';
+import 'authentication/presentation/providers/kakao_auth_providers.dart';
+import 'authentication/presentation/ui/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
-        home: KakaoLoginPage(),
+        home: LoginPage(),
       ),
     );
   }

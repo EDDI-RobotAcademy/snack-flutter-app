@@ -81,8 +81,9 @@ flutter:
   assets:
     - .env
     - assets/images/hungle_app_logo.png
-    - assets/images/kakao_login_medium_wide.png
+    - assets/images/kakao_login.png
     - assets/images/hungle_logo_small.png
+    - assets/images/naver_login.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

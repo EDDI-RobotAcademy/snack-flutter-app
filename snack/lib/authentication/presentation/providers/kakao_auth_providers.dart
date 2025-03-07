@@ -1,9 +1,9 @@
-import 'package:snack/kakao_authentication/domain/usecase/login_usecase.dart';
+import 'package:snack/authentication/kakao_authentication/domain/usecase/login_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../domain/usecase/fetch_user_info_usecase.dart';
-import '../../domain/usecase/request_user_token_usecase.dart';
+import '../../kakao_authentication/domain/usecase/fetch_user_info_usecase.dart';
+import '../../kakao_authentication/domain/usecase/request_user_token_usecase.dart';
 
 class KakaoAuthProvider with ChangeNotifier {
   final LoginUseCase loginUseCase;
@@ -46,10 +46,13 @@ class KakaoAuthProvider with ChangeNotifier {
       final email = userInfo.kakaoAccount?.email;
       final nickname = userInfo.kakaoAccount?.profile?.nickname;
 
-      print("User email: $email, User nickname: $nickname");
+      final accountPath = "Kakao";  // ✅ 추가
+      final roleType = "USER";  // ✅ 추가
+
+      print("User email: $email, User nickname: $nickname, Account Path: $accountPath, Role Type: $roleType");
 
       _userToken = await requestUserTokenUseCase.execute(
-          _accessToken!, email!, nickname!);
+          _accessToken!, email!, nickname!, accountPath, roleType);
 
       print("User Token obtained: $_userToken");
 

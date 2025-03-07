@@ -37,24 +37,30 @@ class KakaoAuthRemoteDataSource {
     }
   }
 
-  Future<String> requestUserTokenFromServer(
-      String accessToken, String email, String nickname) async {
-    final url =
-    Uri.parse('$baseUrl/kakao-oauth/request-user-token'); // Django 서버 URL
+  Future<String> requestUserTokenFromServer(String accessToken, String email,
+      String nickname, String accountPath, String roleType) async {
+    final url = Uri.parse('$baseUrl/kakao-oauth/request-user-token');
 
     print('requestUserTokenFromServer url: $url');
+
+    final requestData = json.encode({
+      'access_token': accessToken,
+      'email': email,
+      'nickname': nickname,
+      'account_path': accountPath,
+      'role_type': roleType,
+    });
+
+    print('Request Data: $requestData'); //전송할 데이터 확인
 
     try {
       final response = await http.post(
         url,
         headers: {
-          'Content-Type': 'application/json', // Ensure Content-Type is set
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
         },
-        body: json.encode({
-          'access_token': accessToken,
-          'email': email,
-          'nickname': nickname,
-        }),
+        body: requestData,
       );
 
       print('Server response status: ${response.statusCode}');
@@ -62,16 +68,15 @@ class KakaoAuthRemoteDataSource {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        print('Server response data: $data');
-        return data['userToken'] ?? ''; // 실제 토큰 필드명에 맞게 수정
+        return data['userToken'] ?? '';
       } else {
-        print(
-            'Error: Failed to request user token, status code: ${response.statusCode}');
-        throw Exception('Failed to request user token: ${response.statusCode}');
+        print('Error: Failed to request user token, status code: ${response
+            .statusCode}');
+        return ''; // 예외 발생 시 빈 문자열 반환
       }
     } catch (error) {
       print('Error during request to server: $error');
-      throw Exception('Request to server failed: $error');
+      return '';
     }
   }
 }
