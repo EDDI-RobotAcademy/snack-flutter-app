@@ -13,6 +13,7 @@ import 'authentication/kakao_authentication/infrasturcture/repository/kakao_auth
 import 'authentication/kakao_authentication/infrasturcture/repository/kakao_auth_repository_impl.dart';
 import 'authentication/presentation/providers/kakao_auth_providers.dart';
 import 'authentication/presentation/ui/login_page.dart';
+import 'home/home_module.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ void main() async {
   String kakaoNativeAppKey = dotenv.env['KAKAO_NATIVE_APP_KEY'] ?? '';
   String kakaoJavaScriptAppKey = dotenv.env['KAKAO_JAVASCRIPT_APP_KEY'] ?? '';
 
-  // 카카오 SDK 초기화
+  // ✅ 카카오 SDK 초기화
   KakaoSdk.init(
     nativeAppKey: kakaoNativeAppKey,
     javaScriptAppKey: kakaoJavaScriptAppKey,
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Kakao Login Demo',
+        title: 'Hungle App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -81,7 +82,11 @@ class MyApp extends StatelessWidget {
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
-        home: LoginPage(),
+        home: Consumer<KakaoAuthProvider>(
+          builder: (context, provider, child) {
+            return provider.isLoggedIn ? HomeModule.provideHomePage() : LoginPage();
+          },
+        ),
       ),
     );
   }

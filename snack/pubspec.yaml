@@ -84,6 +84,11 @@ flutter:
     - assets/images/kakao_login.png
     - assets/images/hungle_logo_small.png
     - assets/images/naver_login.png
+    - assets/images/restaurant_icon.png
+    - assets/images/friend_icon.png
+    - assets/images/home_icon.png
+    - assets/images/mypage_icon.png
+    - assets/images/alarm_icon.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
