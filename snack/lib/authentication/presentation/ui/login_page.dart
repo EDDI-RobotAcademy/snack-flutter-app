@@ -28,37 +28,47 @@ class LoginPage extends StatelessWidget {
           Consumer<KakaoAuthProvider>(
             builder: (context, provider, child) {
               if (provider.isLoading) {
-                return CircularProgressIndicator(); // 로딩 중이면 스피너 표시
+                return Column(
+                  children: [
+                    CircularProgressIndicator(), //  로딩 중이면 스피너 표시
+                    SizedBox(height: 20),
+                  ],
+                );
               }
 
-              return GestureDetector(
-                onTap: provider.isLoading ? null : () => provider.login(),
-                child: Container(
-                  width: 200, // 버튼 크기 조정
-                  height: 50, // 버튼 높이 통일
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/kakao_login.png'),
-                      fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
+              return Column(
+                children: [
+                  //  카카오 로그인 버튼
+                  GestureDetector(
+                    onTap: provider.isLoading ? null : () => provider.login(),
+                    child: Container(
+                      width: 200, // 버튼 크기 조정
+                      height: 50, // 버튼 높이 통일
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/kakao_login.png'),
+                          fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
+                        ),
+                      ),
                     ),
                   ),
-                ),
+
+                  SizedBox(height: 10), // 버튼 아래 여백
+
+                  //  네이버 로그인 버튼
+                  Container(
+                    width: 200, // 버튼 크기 조정
+                    height: 50, // 버튼 높이 통일
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/naver_login.png'),
+                        fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
+                      ),
+                    ),
+                  ),
+                ],
               );
             },
-          ),
-
-          SizedBox(height: 10), // 카카오 로그인 버튼 아래 여백
-
-          // 네이버 로그인 버튼 (현재 기능 구현x)
-          Container(
-            width: 200, // 버튼 크기 조정 (카카오 버튼과 동일)
-            height: 50, // 버튼 높이 통일
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/naver_login.png'),
-                fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
-              ),
-            ),
           ),
 
           Spacer(), // 하단 여백 확보
