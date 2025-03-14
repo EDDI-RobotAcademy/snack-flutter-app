@@ -1,7 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:snack/home/home_module.dart';
+import 'package:snack/authentication/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final KakaoAuthRemoteDataSource _authRemoteDataSource = KakaoAuthRemoteDataSource(dotenv.env['BASE_URL'] ?? "");
+  String userEmail = "이메일을 불러오는 중...";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserEmail();
+  }
+
+  Future<void> _fetchUserEmail() async {
+    try {
+      final user = await _authRemoteDataSource.fetchUserInfoFromKakao();
+      setState(() {
+        userEmail = user.kakaoAccount?.email ?? "이메일 정보 없음";
+      });
+    } catch (error) {
+      print("Error fetching user email: $error");
+      setState(() {
+        userEmail = "이메일 불러오기 실패";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +45,7 @@ class HomePage extends StatelessWidget {
           Column(
             children: [
               Text(
-                "안녕하세요, 헝글님",
+                "안녕하세요, $userEmail",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
