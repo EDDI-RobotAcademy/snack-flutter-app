@@ -1,4 +1,4 @@
-import 'package:snack/kakao_authentication/domain/usecase/request_user_token_usecase.dart';
+import 'package:snack/authentication/kakao_authentication/domain/usecase/request_user_token_usecase.dart';
 import '../../infrasturcture/repository/kakao_auth_repository.dart';
 
 class RequestUserTokenUseCaseImpl implements RequestUserTokenUseCase {
@@ -8,11 +8,10 @@ class RequestUserTokenUseCaseImpl implements RequestUserTokenUseCase {
 
   @override
   Future<String> execute(
-      String accessToken, String email, String nickname) async {
+      String accessToken, String email, String nickname, String accountPath, String roleType) async {
     try {
-      // Django 서버로 요청하여 User Token 반환
       final userToken =
-      await repository.requestUserToken(accessToken, email, nickname);
+      await repository.requestUserToken(accessToken, email, nickname, accountPath, roleType);
       print("User token obtained: $userToken");
       return userToken;
     } catch (error) {
