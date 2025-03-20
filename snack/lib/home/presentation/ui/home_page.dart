@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:snack/home/home_module.dart';
-import 'package:snack/authentication/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'package:snack/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
 
 class HomePage extends StatefulWidget {
   @override

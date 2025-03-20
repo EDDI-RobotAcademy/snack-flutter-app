@@ -69,7 +69,16 @@
             </intent-filter>
         </activity>
 
-        <!-- 네이버 로그인 커스텀 URL 스킴 설정 -->
+        <!-- 네이버 로그인 메타데이터와 커스텀 URL 스킴 설정 -->
+        <meta-data
+            android:name="com.naver.sdk.clientId"
+            android:value="@string/naver_client_id" />
+        <meta-data
+            android:name="com.naver.sdk.clientSecret"
+            android:value="@string/naver_client_secret" />
+        <meta-data
+            android:name="com.naver.sdk.clientName"
+            android:value="@string/naver_client_name" />
         <activity
             android:name="com.navercorp.nid.NidOAuthLoginActivity"
             android:exported="true">
@@ -77,7 +86,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-<!--                <data android:scheme="naver${naverClientId}" android:host="oauth"/>-->
+                <data android:scheme="naver${naverClientId}" android:host="oauth"/>
             </intent-filter>
         </activity>
 

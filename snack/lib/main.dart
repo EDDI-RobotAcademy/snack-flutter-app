@@ -4,16 +4,26 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_naver_login/flutter_naver_login.dart';
 
-import 'authentication/kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
-import 'authentication/kakao_authentication/domain/usecase/login_usecase_impl.dart';
-import 'authentication/kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
-import 'authentication/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
-import 'authentication/kakao_authentication/infrasturcture/repository/kakao_auth_repository.dart';
-import 'authentication/kakao_authentication/infrasturcture/repository/kakao_auth_repository_impl.dart';
-import 'authentication/presentation/providers/kakao_auth_providers.dart';
+import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
+import 'kakao_authentication/domain/usecase/login_usecase_impl.dart';
+import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
+import 'kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'kakao_authentication/infrasturcture/repository/kakao_auth_repository.dart';
+import 'kakao_authentication/infrasturcture/repository/kakao_auth_repository_impl.dart';
+import 'kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import 'authentication/presentation/ui/login_page.dart';
+import 'naver_authentication/domain/usecase/naver_fetch_user_info_usecase_impl.dart';
+import 'naver_authentication/domain/usecase/naver_request_user_token_usecase_impl.dart';
+import 'naver_authentication/infrastructure/repository/naver_auth_repository.dart';
 import 'home/home_module.dart';
+
+import 'naver_authentication/infrastructure/data_sources/naver_auth_remote_data_source.dart';
+import 'naver_authentication/infrastructure/repository/naver_auth_repository_impl.dart';
+import 'naver_authentication/domain/usecase/naver_login_usecase_impl.dart';
+import 'naver_authentication/presentation/providers/naver_auth_providers.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,13 +40,24 @@ void main() async {
     javaScriptAppKey: kakaoJavaScriptAppKey,
   );
 
+  // 네이버 로그인 설정
+  String clientId = dotenv.env['NAVER_CLIENT_ID'] ?? '';
+  String clientSecret = dotenv.env['NAVER_CLIENT_SECRET'] ?? '';
+  String redirectUri = dotenv.env['NAVER_REDIRECT_URI'] ?? '';
+
   runApp(MyApp(baseUrl: baseServerUrl));
 }
 
 class MyApp extends StatelessWidget {
   final String baseUrl;
 
-  const MyApp({required this.baseUrl, super.key});
+
+  const MyApp({
+    super.key,
+    required this.baseUrl,
+
+  });
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +84,23 @@ class MyApp extends StatelessWidget {
             loginUseCase: context.read<LoginUseCaseImpl>(),
             fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
             requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
+          ),
+        ),
+        Provider<NaverAuthRemoteDataSource>(
+          create: (_) => NaverAuthRemoteDataSource(baseUrl),
+        ),
+        ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
+          update: (_, remoteDataSource, __) =>
+              NaverAuthRepositoryImpl(remoteDataSource),
+        ),
+        Provider<NaverLoginUseCaseImpl>(
+          create: (context) => NaverLoginUseCaseImpl(context.read<NaverAuthRepository>()),
+        ),
+        ChangeNotifierProvider<NaverAuthProvider>(
+          create: (context) => NaverAuthProvider(
+            loginUseCase: context.read<NaverLoginUseCaseImpl>(),
+            fetchUserInfoUseCase: context.read<NaverFetchUserInfoUseCaseImpl>(),
+            requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
           ),
         ),
       ],
