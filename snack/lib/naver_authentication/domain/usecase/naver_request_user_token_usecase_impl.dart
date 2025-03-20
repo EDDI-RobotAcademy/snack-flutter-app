@@ -1,10 +1,10 @@
-import 'package:snack/authentication/kakao_authentication/domain/usecase/request_user_token_usecase.dart';
-import '../../infrasturcture/repository/kakao_auth_repository.dart';
+import 'package:snack/naver_authentication/domain/usecase/naver_request_user_token_usecase.dart';
+import '../../infrastructure/repository/naver_auth_repository.dart';
 
-class RequestUserTokenUseCaseImpl implements RequestUserTokenUseCase {
-  final KakaoAuthRepository repository;
+class NaverRequestUserTokenUseCaseImpl implements NaverRequestUserTokenUseCase {
+  final NaverAuthRepository repository;
 
-  RequestUserTokenUseCaseImpl(this.repository);
+  NaverRequestUserTokenUseCaseImpl(this.repository);
 
   @override
   Future<String> execute(

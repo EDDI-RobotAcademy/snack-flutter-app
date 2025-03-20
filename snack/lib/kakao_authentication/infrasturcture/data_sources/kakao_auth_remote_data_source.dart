@@ -10,7 +10,7 @@ class KakaoAuthRemoteDataSource {
   Future<String> loginWithKakao() async {
     try {
       OAuthToken token;
-      if (await isKakaoTalkInstalled()) {
+      if (await isKakaoTalkInstalled()) {   // 카카오톡 설치 확인
         token = await UserApi.instance.loginWithKakaoTalk();
         print('카카오톡으로 로그인 성공: ${token.accessToken}');
       } else {

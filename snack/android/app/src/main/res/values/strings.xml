@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="naver_client_id">your_naver_client_id</string>
+    <string name="naver_client_secret">your_naver_client_secret</string>
+    <string name="naver_client_name">your_app_name</string>
+</resources>

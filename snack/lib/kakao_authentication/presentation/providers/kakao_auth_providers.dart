@@ -1,16 +1,17 @@
-import 'package:snack/authentication/kakao_authentication/domain/usecase/login_usecase.dart';
+import 'package:snack/kakao_authentication/domain/usecase/login_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../../kakao_authentication/domain/usecase/fetch_user_info_usecase.dart';
-import '../../kakao_authentication/domain/usecase/request_user_token_usecase.dart';
+import '../../domain/usecase/fetch_user_info_usecase.dart';
+import '../../domain/usecase/request_user_token_usecase.dart';
+
 
 class KakaoAuthProvider with ChangeNotifier {
   final LoginUseCase loginUseCase;
   final FetchUserInfoUseCase fetchUserInfoUseCase;
   final RequestUserTokenUseCase requestUserTokenUseCase;
 
-  // Nuxt localStorage와 같은 역할
+  // Nuxt localStorage와 같은 역할, 보안이 필요한 데이터 저장
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
   String? _accessToken;
@@ -28,7 +29,7 @@ class KakaoAuthProvider with ChangeNotifier {
     required this.loginUseCase,
     required this.fetchUserInfoUseCase,
     required this.requestUserTokenUseCase,
-  });
+  }); // 객체 의존성 주입 받아 초기화
 
   Future<void> login() async {
     _isLoading = true;

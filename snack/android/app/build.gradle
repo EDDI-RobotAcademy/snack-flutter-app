@@ -33,7 +33,7 @@ import java.util.Properties
 println "Project Root Directory: ${rootProject.projectDir}"
 
 // .env 파일 경로 확인
-def envFile = file("${project.rootDir}/../.env")  // 프로젝트 루트 디렉토리인 flutter_ddd_test를 가리킴
+def envFile = file("${project.rootDir}/../.env")  // 프로젝트 루트 디렉토리 com.example.snack
 println ".env file path: ${envFile}"
 
 if (envFile.exists()) {
@@ -43,6 +43,9 @@ if (envFile.exists()) {
     }
     project.ext {
         KAKAO_NATIVE_APP_KEY = properties.getProperty("KAKAO_NATIVE_APP_KEY")
+        NAVER_CLIENT_ID = properties.getProperty("NAVER_CLIENT_ID")
+        NAVER_CLIENT_SECRET = properties.getProperty("NAVER_CLIENT_SECRET")
+        NAVER_CLIENT_NAME = properties.getProperty("NAVER_CLIENT_NAME")
     }
 } else {
     throw new GradleException(".env file not found")
@@ -50,7 +53,7 @@ if (envFile.exists()) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+//apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace = "com.example.snack"
@@ -78,8 +81,8 @@ android {
     }
 
     def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
-    def debugKeyStorePath = isWindows ? 'C:/Users/son/.android/debug.keystore' : '/home/oem/.android/debug.keystore'
-    def releaseKeyStorePath = isWindows ? 'C:/Users/son/.android/release-key.jks' : '/home/oem/.android/release-key.jks'
+    def debugKeyStorePath = isWindows ? 'C:/Users/USER/.android/debug.keystore' : '/home/oem/.android/debug.keystore'
+    def releaseKeyStorePath = isWindows ? 'C:/Users/USER/.android/release-key.jks' : '/home/oem/.android/release-key.jks'
 
     println "Debug Keystore Path: ${debugKeyStorePath}"
     println "Release Keystore Path: ${releaseKeyStorePath}"
@@ -133,7 +136,8 @@ android {
 
         manifestPlaceholders = [
                 kakaoAppKey: project.KAKAO_NATIVE_APP_KEY,
-                applicationName: "android.app.Application"  // 수정
+                applicationName: "android.app.Application", // 수정
+                naverClientId: project.NAVER_CLIENT_ID
         ]
     }
 

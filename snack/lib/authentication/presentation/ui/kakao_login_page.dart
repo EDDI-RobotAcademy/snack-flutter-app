@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:snack/naver_authentication/presentation/providers/naver_auth_providers.dart';
-import 'package:snack/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
+import 'providers/kakao_auth_providers.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -26,7 +25,7 @@ class LoginPage extends StatelessWidget {
 
           SizedBox(height: 50), // 로고 아래 여백
 
-          Consumer<NaverAuthProvider>(
+          Consumer<KakaoAuthProvider>(
             builder: (context, provider, child) {
               if (provider.isLoading) {
                 return Column(
@@ -39,7 +38,7 @@ class LoginPage extends StatelessWidget {
 
               return Column(
                 children: [
-                  //  네이버 로그인 버튼
+                  //  카카오 로그인 버튼
                   GestureDetector(
                     onTap: provider.isLoading ? null : () => provider.login(),
                     child: Container(
@@ -47,7 +46,7 @@ class LoginPage extends StatelessWidget {
                       height: 50, // 버튼 높이 통일
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage('assets/images/naver_login.png'),
+                          image: AssetImage('assets/images/kakao_login.png'),
                           fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
                         ),
                       ),
