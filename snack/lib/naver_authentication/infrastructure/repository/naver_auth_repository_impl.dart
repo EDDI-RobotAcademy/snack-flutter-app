@@ -31,15 +31,22 @@ class NaverAuthRepositoryImpl implements NaverAuthRepository {
     print(
         "Requesting user token with accessToken: $accessToken, email: $email, nickname: $nickname, account_path: $accountPath, role_type: $roleType");
     try {
-      // 사용자 토큰 요청 및 결과 반환
-      final userToken = await remoteDataSource.requestUserTokenFromServer(
+      // ✅ userToken이 null일 경우 대비하여 `?? ''`로 기본값 설정
+      final String? userToken = await remoteDataSource.requestUserTokenFromServer(
           accessToken, email, nickname, accountPath, roleType);
-      print("User token obtained: $userToken");
+
+      if (userToken == null || userToken.isEmpty) {
+        print("⚠️ User token is null or empty!");
+        throw Exception("Failed to obtain user token. Response was null or empty.");
+      }
+
+      print("✅ User token obtained: $userToken");
       return userToken;
     } catch (e) {
-      print("Error during requesting user token: $e");
+      print("❌ Error during requesting user token: $e");
       throw Exception("Failed to request user token: $e");
     }
   }
+
 }
 

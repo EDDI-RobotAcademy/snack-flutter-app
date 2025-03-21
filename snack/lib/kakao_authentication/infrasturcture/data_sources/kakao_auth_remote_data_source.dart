@@ -79,4 +79,14 @@ class KakaoAuthRemoteDataSource {
       return '';
     }
   }
+
+  Future<void> logoutFromKakao() async {
+    try {
+      await UserApi.instance.logout();
+      print("Kakao 로그아웃 성공");
+    } catch (error) {
+      print("Kakao 로그아웃 실패: $error");
+    }
+  }
+
 }

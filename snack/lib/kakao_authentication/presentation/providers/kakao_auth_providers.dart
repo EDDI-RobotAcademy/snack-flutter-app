@@ -1,3 +1,4 @@
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:snack/kakao_authentication/domain/usecase/login_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -69,5 +70,27 @@ class KakaoAuthProvider with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<User> fetchUserInfo() async {
+    try {
+      final userInfo = await fetchUserInfoUseCase.execute();
+      return userInfo;
+    } catch (e) {
+      print("Kakao 사용자 정보 불러오기 실패: $e");
+      rethrow;
+    }
+  }
+
+
+  Future<void> logout() async {
+    try {
+      await UserApi.instance.logout();
+      await secureStorage.delete(key: 'userToken');
+      _isLoggedIn = false;
+      notifyListeners();
+    } catch (e) {
+      print("Kakao 로그아웃 실패: $e");
+    }
   }
 }
