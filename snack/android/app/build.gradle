@@ -81,8 +81,8 @@ android {
     }
 
     def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
-    def debugKeyStorePath = isWindows ? 'C:/Users/USER/.android/debug.keystore' : '/home/oem/.android/debug.keystore'
-    def releaseKeyStorePath = isWindows ? 'C:/Users/USER/.android/release-key.jks' : '/home/oem/.android/release-key.jks'
+    def debugKeyStorePath = isWindows ? 'C:/Users/son/.android/debug.keystore' : '/home/oem/.android/debug.keystore'
+    def releaseKeyStorePath = isWindows ? 'C:/Users/son/.android/release-key.jks' : '/home/oem/.android/release-key.jks'
 
     println "Debug Keystore Path: ${debugKeyStorePath}"
     println "Release Keystore Path: ${releaseKeyStorePath}"
@@ -111,6 +111,9 @@ android {
             debuggable true                     // 디버그 모드 활성화
             manifestPlaceholders = [
                     kakaoAppKey: project.KAKAO_NATIVE_APP_KEY,
+                    naverClientId: project.NAVER_CLIENT_ID,
+                    naverClientSecret: project.NAVER_CLIENT_SECRET,
+                    naverClientName: project.NAVER_CLIENT_NAME,
                     applicationName: "android.app.Application"  // 추가된 값
             ]
         }
@@ -121,7 +124,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
                     kakaoAppKey: project.KAKAO_NATIVE_APP_KEY,
-                    applicationName: "android.app.Application"  // 추가된 값
+                    naverClientId: project.NAVER_CLIENT_ID,
+                    naverClientSecret: project.NAVER_CLIENT_SECRET,
+                    naverClientName: project.NAVER_CLIENT_NAME,
+                    applicationName: "android.app.Application"
+                    // 추가된 값
             ]
         }
     }

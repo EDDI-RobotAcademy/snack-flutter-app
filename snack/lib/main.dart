@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 
+import 'home/presentation/ui/home_page.dart';
 import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/login_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
@@ -43,7 +44,14 @@ void main() async {
   // 네이버 로그인 설정
   String clientId = dotenv.env['NAVER_CLIENT_ID'] ?? '';
   String clientSecret = dotenv.env['NAVER_CLIENT_SECRET'] ?? '';
-  String redirectUri = dotenv.env['NAVER_REDIRECT_URI'] ?? '';
+  String clientName = dotenv.env['NAVER_CLIENT_NAME'] ?? '';
+
+  await FlutterNaverLogin.initSdk(
+      clientId: clientId,
+      clientName: clientName,
+      clientSecret: clientSecret
+  );
+
 
   runApp(MyApp(baseUrl: baseServerUrl));
 }
@@ -93,8 +101,21 @@ class MyApp extends StatelessWidget {
           update: (_, remoteDataSource, __) =>
               NaverAuthRepositoryImpl(remoteDataSource),
         ),
-        Provider<NaverLoginUseCaseImpl>(
-          create: (context) => NaverLoginUseCaseImpl(context.read<NaverAuthRepository>()),
+        ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
+          update: (_, remoteDataSource, __) =>
+              NaverAuthRepositoryImpl(remoteDataSource),
+        ),
+        ProxyProvider<NaverAuthRepository, NaverLoginUseCaseImpl>(
+          update: (_, repository, __) =>
+              NaverLoginUseCaseImpl(repository),
+        ),
+        ProxyProvider<NaverAuthRepository, NaverFetchUserInfoUseCaseImpl>(
+          update: (_, repository, __) =>
+              NaverFetchUserInfoUseCaseImpl(repository),
+        ),
+        ProxyProvider<NaverAuthRepository, NaverRequestUserTokenUseCaseImpl>(
+          update: (_, repository, __) =>
+              NaverRequestUserTokenUseCaseImpl(repository),
         ),
         ChangeNotifierProvider<NaverAuthProvider>(
           create: (context) => NaverAuthProvider(
@@ -120,9 +141,15 @@ class MyApp extends StatelessWidget {
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
-        home: Consumer<KakaoAuthProvider>(
-          builder: (context, provider, child) {
-            return provider.isLoggedIn ? HomeModule.provideHomePage() : LoginPage();
+        home: Consumer2<KakaoAuthProvider, NaverAuthProvider>(
+          builder: (context, kakaoProvider, naverProvider, child) {
+            if (kakaoProvider.isLoggedIn) {
+              return HomePage(loginType: "Kakao");
+            } else if (naverProvider.isLoggedIn) {
+              return HomePage(loginType: "Naver");
+            } else {
+              return LoginPage();
+            }
           },
         ),
       ),

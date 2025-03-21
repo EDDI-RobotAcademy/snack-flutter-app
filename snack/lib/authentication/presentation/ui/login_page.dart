@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:snack/naver_authentication/presentation/providers/naver_auth_providers.dart';
 import 'package:snack/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 
+import '../../../home/home_module.dart';
+
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,18 @@ class LoginPage extends StatelessWidget {
           Consumer<KakaoAuthProvider>(
             builder: (context, kakaoProvider, child) {
               return GestureDetector(
-                onTap: kakaoProvider.isLoading ? null : () => kakaoProvider.login(),
+                onTap: kakaoProvider.isLoading
+                    ? null
+                    : () async {
+                  await kakaoProvider.login();
+                  // ✅ 로그인 성공하면 HomePage로 이동
+                  if (kakaoProvider.isLoggedIn) {
+                    Navigator.pushReplacement(
+                      context,
+                      HomeModule.getHomeRoute(loginType: "Kakao"),
+                    );
+                  }
+                },
                 child: Container(
                   width: 200, // 버튼 크기 조정
                   height: 50, // 버튼 높이
@@ -51,7 +64,18 @@ class LoginPage extends StatelessWidget {
           Consumer<NaverAuthProvider>(
             builder: (context, naverProvider, child) {
               return GestureDetector(
-                onTap: naverProvider.isLoading ? null : () => naverProvider.login(),
+                onTap: naverProvider.isLoading
+                    ? null
+                    : () async {
+                  await naverProvider.login();
+                  // ✅ 로그인 성공하면 HomePage로 이동
+                  if (naverProvider.isLoggedIn) {
+                    Navigator.pushReplacement(
+                      context,
+                      HomeModule.getHomeRoute(loginType: "Naver"),
+                    );
+                  }
+                },
                 child: Container(
                   width: 200, // 버튼 크기 조정
                   height: 50, // 버튼 높이

@@ -31,6 +31,17 @@ class NaverAuthProvider with ChangeNotifier {
     required this.requestUserTokenUseCase,
   });
 
+  Future<NaverAccountResult> fetchUserInfo() async {
+    try {
+      final userInfo = await fetchUserInfoUseCase.execute();
+      return userInfo;
+    } catch (e) {
+      print("Naver 사용자 정보 불러오기 실패: $e");
+      rethrow;
+    }
+  }
+
+
   Future<void> login() async {
     _isLoading = true;
     _message = '';
@@ -71,5 +82,16 @@ class NaverAuthProvider with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> logout() async {
+    try {
+      await FlutterNaverLogin.logOut();
+      await secureStorage.delete(key: 'userToken');
+      _isLoggedIn = false;
+      notifyListeners();
+    } catch (e) {
+      print("Naver 로그아웃 실패: $e");
+    }
   }
 }
