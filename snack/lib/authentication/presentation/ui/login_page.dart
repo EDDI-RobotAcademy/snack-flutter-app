@@ -26,48 +26,42 @@ class LoginPage extends StatelessWidget {
 
           SizedBox(height: 50), // 로고 아래 여백
 
+          // 카카오 로그인 버튼
+          Consumer<KakaoAuthProvider>(
+            builder: (context, kakaoProvider, child) {
+              return GestureDetector(
+                onTap: kakaoProvider.isLoading ? null : () => kakaoProvider.login(),
+                child: Container(
+                  width: 200, // 버튼 크기 조정
+                  height: 50, // 버튼 높이
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/kakao_login.png'),
+                      fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+
+          SizedBox(height: 10), // 카카오 버튼 아래 여백
+
+          // 네이버 로그인 버튼
           Consumer<NaverAuthProvider>(
-            builder: (context, provider, child) {
-              if (provider.isLoading) {
-                return Column(
-                  children: [
-                    CircularProgressIndicator(), //  로딩 중이면 스피너 표시
-                    SizedBox(height: 20),
-                  ],
-                );
-              }
-
-              return Column(
-                children: [
-                  //  네이버 로그인 버튼
-                  GestureDetector(
-                    onTap: provider.isLoading ? null : () => provider.login(),
-                    child: Container(
-                      width: 200, // 버튼 크기 조정
-                      height: 50, // 버튼 높이 통일
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/naver_login.png'),
-                          fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
-                        ),
-                      ),
+            builder: (context, naverProvider, child) {
+              return GestureDetector(
+                onTap: naverProvider.isLoading ? null : () => naverProvider.login(),
+                child: Container(
+                  width: 200, // 버튼 크기 조정
+                  height: 50, // 버튼 높이
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/naver_login.png'),
+                      fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
                     ),
                   ),
-
-                  SizedBox(height: 10), // 버튼 아래 여백
-
-                  //  네이버 로그인 버튼
-                  Container(
-                    width: 200, // 버튼 크기 조정
-                    height: 50, // 버튼 높이 통일
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/naver_login.png'),
-                        fit: BoxFit.fill, // 이미지 비율 유지하면서 크기 맞춤
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               );
             },
           ),

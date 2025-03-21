@@ -13,7 +13,7 @@ import 'infrastructure/repository/naver_auth_repository_impl.dart';
 
 
 class NaverAuthModule {
-  static Widget provideNaverLoginPage() {
+  static Widget provideNaverProviders() {
     dotenv.load();
     String baseServerUrl = dotenv.env['BASE_URL'] ?? '';
 
@@ -42,7 +42,39 @@ class NaverAuthModule {
           ),
         ),
       ],
-      child: LoginPage()
+       // child: LoginPage()
     );
   }
 }
+
+// class NaverAuthModule {
+//   static List<Provider> provideNaverProviders() {
+//     dotenv.load();
+//     String baseServerUrl = dotenv.env['BASE_URL'] ?? '';
+//
+//     return [
+//       Provider<NaverAuthRemoteDataSource>(
+//           create: (_) => NaverAuthRemoteDataSource(baseServerUrl)
+//       ),
+//       ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepositoryImpl>(
+//         update: (_, remoteDataSource, __) => NaverAuthRepositoryImpl(remoteDataSource),
+//       ),
+//       ProxyProvider<NaverAuthRepositoryImpl, NaverLoginUseCaseImpl>(
+//         update: (_, repository, __) => NaverLoginUseCaseImpl(repository),
+//       ),
+//       ProxyProvider<NaverAuthRepositoryImpl, NaverFetchUserInfoUseCaseImpl>(
+//         update: (_, repository, __) => NaverFetchUserInfoUseCaseImpl(repository),
+//       ),
+//       ProxyProvider<NaverAuthRepositoryImpl, NaverRequestUserTokenUseCaseImpl>(
+//         update: (_, repository, __) => NaverRequestUserTokenUseCaseImpl(repository),
+//       ),
+//       ChangeNotifierProvider<NaverAuthProvider>(
+//         create: (context) => NaverAuthProvider(
+//           loginUseCase: context.read<NaverLoginUseCaseImpl>(),
+//           fetchUserInfoUseCase: context.read<NaverFetchUserInfoUseCaseImpl>(),
+//           requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
+//         ),
+//       ),
+//     ];
+//   }
+// }
