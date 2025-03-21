@@ -12,7 +12,7 @@ import 'infrasturcture/repository/kakao_auth_repository.dart';
 import 'infrasturcture/repository/kakao_auth_repository_impl.dart';
 
 class KakaoAuthModule {
-  static Widget provideKakaoLoginPage() {
+  static Widget provideKakaoProviders() {
     dotenv.load();
     String baseServerUrl = dotenv.env['BASE_URL'] ?? '';
 
@@ -37,7 +37,33 @@ class KakaoAuthModule {
           ),
         ),
       ],
-      child: LoginPage()
+     // child: LoginPage()
     );
   }
 }
+
+// class KakaoAuthModule {
+//   static List<Provider> provideKakaoProviders() {
+//     dotenv.load();
+//     String baseServerUrl = dotenv.env['BASE_URL'] ?? '';
+//
+//     return [
+//       Provider<KakaoAuthRemoteDataSource>(
+//           create: (_) => KakaoAuthRemoteDataSource(baseServerUrl)
+//       ),
+//       ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
+//         update: (_, remoteDataSource, __) => KakaoAuthRepositoryImpl(remoteDataSource),
+//       ),
+//       ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
+//         update: (_, repository, __) => LoginUseCaseImpl(repository),
+//       ),
+//       ChangeNotifierProvider<KakaoAuthProvider>(
+//         create: (context) => KakaoAuthProvider(
+//           loginUseCase: context.read<LoginUseCaseImpl>(),
+//           fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
+//           requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
+//         ),
+//       ),
+//     ];
+//   }
+// }
