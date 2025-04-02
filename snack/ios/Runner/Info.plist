@@ -27,7 +27,13 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakaoYOUR_APP_KEY</string>
+				<string>kakaod2eb2838027404f3bf5c32c66d89f23f</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>naverPnkscpmm4s1TMOhzeJrs</string>
 			</array>
 		</dict>
 	</array>
@@ -37,6 +43,8 @@
 	<array>
 		<string>kakaotalk</string>
 		<string>kakaokompassauth</string>
+		<string>naversearchapp</string>
+		<string>naversearchthirdlogin</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -52,6 +60,15 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>naver.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
 			<key>s3.amazonaws.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
