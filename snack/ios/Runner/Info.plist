@@ -22,6 +22,8 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+
+	<!-- ✅ URL 스킴 (카카오 / 네이버) -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -37,8 +39,24 @@
 			</array>
 		</dict>
 	</array>
+
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+
+	<!-- ✅ 네이버 로그인 필수 키 -->
+	<key>naverServiceAppUrlScheme</key>
+	<string>naverPnkscpmm4s1TMOhzeJrs</string>
+
+	<key>naverConsumerKey</key>
+	<string>Pnkscpmm4s1TMOhzeJrs</string>
+
+	<key>naverConsumerSecret</key>
+	<string>AogpnyKdXc</string>
+
+	<key>naverServiceAppName</key>
+	<string>Hungle</string>
+
+	<!-- ✅ 외부 앱 쿼리 허용 -->
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>kakaotalk</string>
@@ -46,6 +64,7 @@
 		<string>naversearchapp</string>
 		<string>naversearchthirdlogin</string>
 	</array>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAllowsArbitraryLoads</key>
@@ -54,6 +73,8 @@
 	<true/>
 	<key>NSAllowsArbitraryLoadsInWebContent</key>
 	<true/>
+
+	<!-- ✅ 네이버 및 기타 도메인 허용 -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -61,6 +82,15 @@
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>naver.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>naver.net</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
@@ -80,6 +110,8 @@
 			</dict>
 		</dict>
 	</dict>
+
+	<!-- ✅ 권한 설명 -->
 	<key>NSCameraUsageDescription</key>
 	<string>이 앱은 사진 촬영을 위해 카메라 접근 권한이 필요합니다.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -90,6 +122,7 @@
 	<string>이 앱은 편집된 사진을 저장하기 위해 사진 라이브러리에 접근합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>이 앱은 사진을 업로드하기 위해 사진 라이브러리에 접근합니다.</string>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
