@@ -46,11 +46,11 @@ void main() async {
   String clientSecret = dotenv.env['NAVER_CLIENT_SECRET'] ?? '';
   String clientName = dotenv.env['NAVER_CLIENT_NAME'] ?? '';
 
-  await FlutterNaverLogin.initSdk(
-      clientId: clientId,
-      clientName: clientName,
-      clientSecret: clientSecret
-  );
+  //await FlutterNaverLogin.initSdk(
+  //    clientId: clientId,
+  //    clientName: clientName,
+  //    clientSecret: clientSecret
+  //);
 
 
   runApp(MyApp(baseUrl: baseServerUrl));
