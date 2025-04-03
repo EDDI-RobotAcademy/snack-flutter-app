@@ -29,13 +29,13 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakaod2eb2838027404f3bf5c32c66d89f23f</string>
+				<string>$(KAKAO_NATIVE_APP_KEY)</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>naverPnkscpmm4s1TMOhzeJrs</string>
+				<string>$(NAVER_CLIENT_ID)</string>
 			</array>
 		</dict>
 	</array>
@@ -45,13 +45,13 @@
 
 	<!-- ✅ 네이버 로그인 필수 키 -->
 	<key>naverServiceAppUrlScheme</key>
-	<string>naverPnkscpmm4s1TMOhzeJrs</string>
+	<string>$(NAVER_CLIENT_ID)</string>
 
 	<key>naverConsumerKey</key>
-	<string>Pnkscpmm4s1TMOhzeJrs</string>
+	<string>$(NAVER_CLIENT_ID)</string>
 
 	<key>naverConsumerSecret</key>
-	<string>AogpnyKdXc</string>
+	<string>$(NAVER_CLIENT_SECRET)</string>
 
 	<key>naverServiceAppName</key>
 	<string>Hungle</string>
