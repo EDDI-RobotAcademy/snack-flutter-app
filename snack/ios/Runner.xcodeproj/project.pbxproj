@@ -352,9 +352,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -455,7 +459,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				KAKAO_NATIVE_APP_KEY = d2eb2838027404f3bf5c32c66d89f23f;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				NAVER_CLIENT_ID = Pnkscpmm4s1TMOhzeJrs;
+				NAVER_CLIENT_SECRET = AogpnyKdXc;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -585,7 +592,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				KAKAO_NATIVE_APP_KEY = d2eb2838027404f3bf5c32c66d89f23f;
 				MTL_ENABLE_DEBUG_INFO = YES;
+				NAVER_CLIENT_ID = Pnkscpmm4s1TMOhzeJrs;
+				NAVER_CLIENT_SECRET = AogpnyKdXc;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -636,7 +646,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				KAKAO_NATIVE_APP_KEY = d2eb2838027404f3bf5c32c66d89f23f;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				NAVER_CLIENT_ID = Pnkscpmm4s1TMOhzeJrs;
+				NAVER_CLIENT_SECRET = AogpnyKdXc;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
