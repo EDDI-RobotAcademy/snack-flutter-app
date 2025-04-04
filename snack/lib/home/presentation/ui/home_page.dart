@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:snack/home/home_module.dart';
 import 'package:snack/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
 import 'package:snack/authentication/presentation/ui/login_page.dart';
+import 'package:snack/common_ui/custom_bottom_nav_bar.dart';
+
 
 import '../../../kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import '../../../naver_authentication/infrastructure/data_sources/naver_auth_remote_data_source.dart';
@@ -131,42 +133,9 @@ class _HomePageState extends State<HomePage> {
           ),
 
           Spacer(),
-
-          // ✅ 하단 네비게이션 바
-          Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _navBarItem(context, 'assets/images/restaurant_icon.png'),
-                _navBarItem(context, 'assets/images/friend_icon.png'),
-                _navBarItem(context, 'assets/images/home_icon.png', isCenter: true), // 홈 버튼
-                _navBarItem(context, 'assets/images/mypage_icon.png'),
-                _navBarItem(context, 'assets/images/alarm_icon.png'),
-              ],
-            ),
-          ),
+          /// 공통 하단 네비게이션 바 적용
+          CustomBottomNavBar(loginType: widget.loginType),
         ],
-      ),
-    );
-  }
-
-  // ✅ 하단 네비게이션 바 아이템 (홈 버튼 클릭 시 홈 이동)
-  Widget _navBarItem(BuildContext context, String iconPath, {bool isCenter = false}) {
-    return GestureDetector(
-      onTap: () {
-        if (iconPath == 'assets/images/home_icon.png') {
-          // ✅ 홈 버튼 클릭 시 홈 페이지로 이동
-          Navigator.pushReplacement(
-              context,
-            MaterialPageRoute(builder: (context) => HomePage(loginType: widget.loginType)),
-          );
-        }
-      },
-      child: Image.asset(
-        iconPath,
-        width: isCenter ? 50 : 40, // 홈 버튼 크기 강조
-        height: isCenter ? 50 : 40,
       ),
     );
   }
