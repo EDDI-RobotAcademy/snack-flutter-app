@@ -56,6 +56,7 @@ dependencies:
   sensors_plus: ^6.1.1
   flutter_native_splash: ^2.4.4
 #  kakao_map_plugin: ^0.3.2
+  google_sign_in: ^6.3.0
 
 dev_dependencies:
   flutter_test:
@@ -83,6 +84,7 @@ flutter:
   assets:
     - .env
     - assets/images/hungle_app_logo.png
+    - assets/images/google_login.png
     - assets/images/kakao_login.png
     - assets/images/hungle_logo_small.png
     - assets/images/naver_login.png
