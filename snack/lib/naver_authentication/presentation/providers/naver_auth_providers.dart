@@ -1,18 +1,17 @@
-import 'package:snack/naver_authentication/domain/usecase/naver_login_usecase.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_naver_login/flutter_naver_login.dart';
+import 'package:naver_login_sdk/naver_login_sdk.dart';
+
+import '../../domain/usecase/naver_login_usecase.dart';
 import '../../domain/usecase/naver_fetch_user_info_usecase.dart';
 import '../../domain/usecase/naver_request_user_token_usecase.dart';
-
 
 class NaverAuthProvider with ChangeNotifier {
   final NaverLoginUseCase loginUseCase;
   final NaverFetchUserInfoUseCase fetchUserInfoUseCase;
   final NaverRequestUserTokenUseCase requestUserTokenUseCase;
 
-  // Nuxt localStorage와 같은 역할
-  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  final secureStorage = const FlutterSecureStorage();
 
   String? _accessToken;
   String? _userToken;
@@ -20,7 +19,6 @@ class NaverAuthProvider with ChangeNotifier {
   bool _isLoading = false;
   String _message = '';
 
-  // 해당 변수 값을 즉시 가져올 수 있도록 구성
   bool get isLoggedIn => _isLoggedIn;
   bool get isLoading => _isLoading;
   String get message => _message;
@@ -31,16 +29,13 @@ class NaverAuthProvider with ChangeNotifier {
     required this.requestUserTokenUseCase,
   });
 
-  Future<NaverAccountResult> fetchUserInfo() async {
+  Future<Map<String, dynamic>> fetchUserInfo() async {
     try {
-      final userInfo = await fetchUserInfoUseCase.execute();
-      return userInfo;
+      return await fetchUserInfoUseCase.execute();
     } catch (e) {
-      print("Naver 사용자 정보 불러오기 실패: $e");
       rethrow;
     }
   }
-
 
   Future<void> login() async {
     _isLoading = true;
@@ -48,36 +43,30 @@ class NaverAuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      print("Naver loginUseCase.execute()");
       _accessToken = await loginUseCase.execute();
-      print("AccessToken obtained: $_accessToken");
+      final profile = await fetchUserInfoUseCase.execute();
 
-      final NaverAccountResult userInfo = await FlutterNaverLogin.currentAccount();
-      print("User Info fetched: $userInfo");
+      final email = profile['email'];
+      final nickname = profile['nickname'];
 
-
-      final email = userInfo.email;
-      final nickname = userInfo.nickname;
-
-      final accountPath = "Naver";  // ✅ 추가
-      final roleType = "USER";  // ✅ 추가
-
-      print("User email: $email, User nickname: $nickname, Account Path: $accountPath, Role Type: $roleType");
+      if (email == null || nickname == null) {
+        throw Exception("이메일 또는 닉네임 없음");
+      }
 
       _userToken = await requestUserTokenUseCase.execute(
-          _accessToken!, email!, nickname!, accountPath, roleType);
-
-      print("User Token obtained: $_userToken");
+        _accessToken!,
+        email,
+        nickname,
+        "Naver",
+        "USER",
+      );
 
       await secureStorage.write(key: 'userToken', value: _userToken);
-
       _isLoggedIn = true;
       _message = '로그인 성공';
-      print("Login successful");
     } catch (e) {
       _isLoggedIn = false;
       _message = "로그인 실패: $e";
-      print(e.toString());
     }
 
     _isLoading = false;
@@ -86,12 +75,12 @@ class NaverAuthProvider with ChangeNotifier {
 
   Future<void> logout() async {
     try {
-      await FlutterNaverLogin.logOut();
+      await NaverLoginSDK.logout();
       await secureStorage.delete(key: 'userToken');
       _isLoggedIn = false;
       notifyListeners();
     } catch (e) {
-      print("Naver 로그아웃 실패: $e");
+      print("로그아웃 실패: $e");
     }
   }
 }

@@ -4,9 +4,12 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:flutter_naver_login/flutter_naver_login.dart';
 
+import 'authentication/presentation/ui/login_page.dart';
 import 'home/presentation/ui/home_page.dart';
+import 'home/home_module.dart';
+
+// Kakao
 import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/login_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
@@ -14,44 +17,38 @@ import 'kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_
 import 'kakao_authentication/infrasturcture/repository/kakao_auth_repository.dart';
 import 'kakao_authentication/infrasturcture/repository/kakao_auth_repository_impl.dart';
 import 'kakao_authentication/presentation/providers/kakao_auth_providers.dart';
-import 'authentication/presentation/ui/login_page.dart';
-import 'naver_authentication/domain/usecase/naver_fetch_user_info_usecase_impl.dart';
-import 'naver_authentication/domain/usecase/naver_request_user_token_usecase_impl.dart';
-import 'naver_authentication/infrastructure/repository/naver_auth_repository.dart';
-import 'home/home_module.dart';
 
+// Naver (naver_login_sdk 기반)
+import 'naver_authentication/domain/usecase/naver_fetch_user_info_usecase_impl.dart';
+import 'naver_authentication/domain/usecase/naver_login_usecase_impl.dart';
+import 'naver_authentication/domain/usecase/naver_request_user_token_usecase_impl.dart';
 import 'naver_authentication/infrastructure/data_sources/naver_auth_remote_data_source.dart';
 import 'naver_authentication/infrastructure/repository/naver_auth_repository_impl.dart';
-import 'naver_authentication/domain/usecase/naver_login_usecase_impl.dart';
 import 'naver_authentication/presentation/providers/naver_auth_providers.dart';
-
+import 'naver_authentication/infrastructure/repository/naver_auth_repository.dart';
+import 'package:naver_login_sdk/naver_login_sdk.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await dotenv.load();
 
   String baseServerUrl = dotenv.env['BASE_URL'] ?? '';
   String kakaoNativeAppKey = dotenv.env['KAKAO_NATIVE_APP_KEY'] ?? '';
   String kakaoJavaScriptAppKey = dotenv.env['KAKAO_JAVASCRIPT_APP_KEY'] ?? '';
 
-  // ✅ 카카오 SDK 초기화
+  // ✅ Naver SDK 초기화 추가
+  await NaverLoginSDK.initialize(
+    clientId: dotenv.env['NAVER_CLIENT_ID'] ?? '',
+    clientSecret: dotenv.env['NAVER_CLIENT_SECRET'] ?? '',
+    clientName: dotenv.env['NAVER_CLIENT_NAME'] ?? '',
+  );
+
+
+  // ✅ Kakao SDK 초기화
   KakaoSdk.init(
     nativeAppKey: kakaoNativeAppKey,
     javaScriptAppKey: kakaoJavaScriptAppKey,
   );
-
-  // 네이버 로그인 설정
-  String clientId = dotenv.env['NAVER_CLIENT_ID'] ?? '';
-  String clientSecret = dotenv.env['NAVER_CLIENT_SECRET'] ?? '';
-  String clientName = dotenv.env['NAVER_CLIENT_NAME'] ?? '';
-
-  //await FlutterNaverLogin.initSdk(
-  //    clientId: clientId,
-  //    clientName: clientName,
-  //    clientSecret: clientSecret
-  //);
-
 
   runApp(MyApp(baseUrl: baseServerUrl));
 }
@@ -59,18 +56,13 @@ void main() async {
 class MyApp extends StatelessWidget {
   final String baseUrl;
 
-
-  const MyApp({
-    super.key,
-    required this.baseUrl,
-
-  });
-
+  const MyApp({super.key, required this.baseUrl});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // Kakao
         Provider<KakaoAuthRemoteDataSource>(
             create: (_) => KakaoAuthRemoteDataSource(baseUrl)),
         ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
@@ -94,12 +86,10 @@ class MyApp extends StatelessWidget {
             requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
           ),
         ),
+
+        // Naver
         Provider<NaverAuthRemoteDataSource>(
           create: (_) => NaverAuthRemoteDataSource(baseUrl),
-        ),
-        ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
-          update: (_, remoteDataSource, __) =>
-              NaverAuthRepositoryImpl(remoteDataSource),
         ),
         ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
           update: (_, remoteDataSource, __) =>
@@ -126,7 +116,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Hungle App',
+        title: 'Hungll App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -137,7 +127,7 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           quill.FlutterQuillLocalizations.delegate,
         ],
-        supportedLocales: [
+        supportedLocales: const [
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],

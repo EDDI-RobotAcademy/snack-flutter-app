@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>HUNGLE</string>
+	<string>HUNGLL</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>HUNGLE</string>
+	<string>HUNGLL</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -23,51 +23,48 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 
-    <!-- ✅ 구글 로그인 관련 설정 추가 -->
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
+
+<key>CFBundleURLTypes</key>
+<array>
+    <!-- ✅ 구글 로그인 관련 -->
+    <dict>
         <key>CFBundleTypeRole</key>
         <string>Editor</string>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>$(REVERSED_CLIENT_ID)</string>
+            <string>$(REVERSED_CLIENT_ID)</string>
         </array>
-      </dict>
-    </array>
+    </dict>
 
-	<!-- ✅ URL 스킴 (카카오 / 네이버) -->
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>$(KAKAO_NATIVE_APP_KEY)</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>$(NAVER_CLIENT_ID)</string>
-			</array>
-		</dict>
-	</array>
+    <!-- ✅ 카카오 로그인 관련 -->
+    <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>kakao$(KAKAO_NATIVE_APP_KEY)</string>
+        </array>
+    </dict>
 
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+    <!-- ✅ 네이버 로그인 관련 -->
+    <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>naver$(NAVER_CLIENT_ID)</string>
+        </array>
+    </dict>
+</array>
 
-	<!-- ✅ 네이버 로그인 필수 키 -->
-	<key>naverServiceAppUrlScheme</key>
-	<string>$(NAVER_CLIENT_ID)</string>
+<!-- ✅ 네이버 로그인 필수 키 (naver prefix 주의!) -->
+<key>naverServiceAppUrlScheme</key>
+<string>naver$(NAVER_CLIENT_ID)</string>
 
-	<key>naverConsumerKey</key>
-	<string>$(NAVER_CLIENT_ID)</string>
+<key>naverConsumerKey</key>
+<string>$(NAVER_CLIENT_ID)</string>
 
-	<key>naverConsumerSecret</key>
-	<string>$(NAVER_CLIENT_SECRET)</string>
+<key>naverConsumerSecret</key>
+<string>$(NAVER_CLIENT_SECRET)</string>
 
-	<key>naverServiceAppName</key>
-	<string>Hungle</string>
+<key>naverServiceAppName</key>
+<string>HUNGLL</string>
 
 	<!-- ✅ 외부 앱 쿼리 허용 -->
 	<key>LSApplicationQueriesSchemes</key>

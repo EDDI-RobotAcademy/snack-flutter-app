@@ -1,124 +1,93 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_naver_login/flutter_naver_login.dart';
-import 'package:snack/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'package:naver_login_sdk/naver_login_sdk.dart';
 
 class NaverAuthRemoteDataSource {
   final String baseUrl;
+
   NaverAuthRemoteDataSource(this.baseUrl);
 
-  /// 1. 네이버 로그인 → access token 리턴
   Future<String> loginWithNaver() async {
     try {
-      // 네이버 로그인 시도
-      final NaverLoginResult result = await FlutterNaverLogin.logIn();
-      print("로그인 상태: ${result.status}");
-
-      // 🚀 로그인 성공했지만 accessToken이 비어 있는 경우 대비
-      String? accessToken = result.accessToken?.accessToken;
-      if (accessToken == null || accessToken.isEmpty) {
-        print("⚠️ accessToken이 비어 있음. currentAccessToken() 호출!");
-        final NaverAccessToken newToken = await FlutterNaverLogin.currentAccessToken;
-        accessToken = newToken.accessToken;
-      }
-
-      print("최종 네이버 accessToken: $accessToken");
-
-      if (accessToken == null || accessToken.isEmpty) {
-        throw Exception("Naver 로그인 실패: accessToken이 null 또는 비어 있음");
-      }
-
-      // 🔥 서버에 유저 토큰 요청
-      final serverResponse = await requestUserTokenFromServer(
-        accessToken,
-        "ajeseung@naver.com",
-        "ajes****",
-        "Naver",
-        "USER",
+      await NaverLoginSDK.authenticate(
+        callback: OAuthLoginCallback(
+          onSuccess: () {},
+          onFailure: (status, message) {
+            throw Exception("로그인 실패: $status / $message");
+          },
+          onError: (code, message) {
+            throw Exception("로그인 오류: $code / $message");
+          },
+        ),
       );
-
-      print("서버 응답: $serverResponse");
-
-      return accessToken;
-    } catch (error) {
-      print("로그인 실패: $error");
-      throw Exception("Naver 로그인 실패!");
+      // 로그인 성공 후 토큰 정보를 직접 받아옵니다.
+      final tokenInfo = await NaverLoginSDK.getAccessToken();
+      return tokenInfo;
+    } catch (e) {
+      throw Exception("Naver 로그인 예외 발생: $e");
     }
   }
 
+  Future<Map<String, dynamic>> fetchUserInfoFromNaver() async {
+    final Completer<Map<String, dynamic>> completer = Completer<Map<String, dynamic>>();
 
-
-  /// 2. 네이버 SDK에서 사용자 정보 가져오기
-  Future<NaverAccountResult> fetchUserInfoFromNaver() async {
     try {
-      final result = await FlutterNaverLogin.currentAccount();
-      if (result != null) {
-        print("네이버 사용자 정보: ${result.email}, ${result.nickname}");
-        return result;
-      } else {
-        throw Exception("네이버 사용자 정보 없음");
-      }
-    } catch (error) {
-      print('Error fetching user info: $error');
-      throw Exception('Failed to fetch user info from Naver');
+      await NaverLoginSDK.profile(
+        callback: ProfileCallback(
+          onSuccess: (resultCode, message, response) {
+            completer.complete(response); // response를 Completer에 전달
+          },
+          onFailure: (httpStatus, message) {
+            completer.completeError(Exception("사용자 정보 가져오기 실패: HttpStatus: $httpStatus, Message: $message"));
+          },
+          onError: (errorCode, message) {
+            completer.completeError(Exception("사용자 정보 가져오기 오류: ErrorCode: $errorCode, Message: $message"));
+          },
+        ),
+      );
+
+      return completer.future; // Completer의 Future를 반환
+    } catch (e) {
+      throw Exception("Naver 사용자 정보 실패: $e");
     }
   }
 
-  /// 3. 서버에 유저 토큰 요청
-  Future<String?> requestUserTokenFromServer(
-      String accessToken,
-      String email,
-      String nickname,
-      String accountPath,
-      String roleType,
-      ) async {
-    final url = Uri.parse('$baseUrl/naver-oauth/request-user-token');
+  Future<String> requestUserTokenFromServer({
+    required String accessToken,
+    required String email,
+    required String nickname,
+    required String accountPath,
+    required String roleType,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/naver-oauth/request-user-token'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'access_token': accessToken,
+        'email': email,
+        'nickname': nickname,
+        'account_path': accountPath,
+        'role_type': roleType,
+      }),
+    );
 
-    final requestData = json.encode({
-      'access_token': accessToken,
-      'email': email,
-      'nickname': nickname,
-      'account_path': accountPath,
-      'role_type': roleType,
-    });
-
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Authorization': 'Bearer $accessToken',
-          'Content-Type': 'application/json',
-        },
-        body: requestData,
-      );
-
-      print("서버 응답: ${response.statusCode}, ${response.body}");
-
-      final data = json.decode(response.body);
-
-      // ✅ userToken이 없으면 null 반환
-      if (response.statusCode == 200 && data.containsKey('userToken')) {
-        final userToken = data['userToken'];
-        print("✅ 서버에서 받은 userToken: $userToken");
-        return userToken;
-      } else {
-        final errorMessage = data['error_message'] ?? 'Unknown error from server';
-        print("⚠️ 서버 응답 오류: $errorMessage");
-        return null;  // 안전한 null 반환
-      }
-    } catch (error) {
-      print("❌ requestUserTokenFromServer 에러: $error");
-      return null;  // 예외 발생 시 null 반환
+    final data = jsonDecode(response.body);
+    if (response.statusCode == 200 && data['userToken'] != null) {
+      return data['userToken'];
+    } else {
+      throw Exception('유저 토큰 요청 실패: ${data['error_message'] ?? 'Unknown'}');
     }
   }
 
   Future<void> logoutFromNaver() async {
     try {
-      await FlutterNaverLogin.logOut();
-      print("✅ Naver 로그아웃 성공");
-    } catch (error) {
-      print("❌ Naver 로그아웃 실패: $error");
+      await NaverLoginSDK.logout();
+    } catch (e) {
+      throw Exception("로그아웃 실패: $e");
     }
   }
-
 }

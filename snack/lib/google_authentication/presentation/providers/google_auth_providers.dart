@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../../domain/usecase/google_login_usecase.dart';
+import '../../domain/usecase/google_login_usecase.dart';
+
 
 class GoogleAuthProvider with ChangeNotifier {
   final GoogleLoginUseCase loginUseCase;

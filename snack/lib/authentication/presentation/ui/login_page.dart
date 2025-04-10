@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:snack/naver_authentication/presentation/providers/naver_auth_providers.dart';
 import 'package:snack/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
-import 'package:snack/google_authentication/presentation/providers/google_auth_provider.dart';
+import 'package:snack/google_authentication/presentation/providers/google_auth_providers.dart';
 
 import '../../../home/home_module.dart';
 
@@ -113,7 +113,7 @@ class LoginPage extends StatelessWidget {
                   height: 50,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/google_login.png'), // 🔵 구글 로그인 이미지 준비
+                      image: AssetImage('assets/images/google_login.png'), //  구글 로그인 이미지 준비
                       fit: BoxFit.fill,
                     ),
                   ),

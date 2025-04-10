@@ -1,14 +1,13 @@
-import '../../infrastructure/repository/naver_auth_repository.dart';
+import '../../infrastructure/data_sources/naver_auth_remote_data_source.dart';
 import 'naver_login_usecase.dart';
 
 class NaverLoginUseCaseImpl implements NaverLoginUseCase {
-  final NaverAuthRepository repository;
+  final NaverAuthRemoteDataSource remote;
 
-  NaverLoginUseCaseImpl(this.repository);
+  NaverLoginUseCaseImpl(this.remote);
 
   @override
   Future<String> execute() async {
-    print("LoginUseCaseImpl execute()");
-    return await repository.login();
+    return await remote.loginWithNaver();
   }
 }

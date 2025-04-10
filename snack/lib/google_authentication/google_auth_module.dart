@@ -14,7 +14,7 @@ import 'domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'domain/usecase/request_user_token_usecase.dart';
 import 'domain/usecase/request_user_token_usecase_impl.dart';
 
-import 'presentation/providers/google_auth_provider.dart';
+import 'presentation/providers/google_auth_providers.dart';
 
 class GoogleAuthModule {
   static List<SingleChildWidget> provideGoogleProviders() {
