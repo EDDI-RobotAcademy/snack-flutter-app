@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>HUNGLE</string>
+	<string>HUNGLL</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>HUNGLE</string>
+	<string>HUNGLL</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -67,7 +67,7 @@
 	<string>$(NAVER_CLIENT_SECRET)</string>
 
 	<key>naverServiceAppName</key>
-	<string>Hungle</string>
+	<string>HUNGLL</string>
 
 	<!-- ✅ 외부 앱 쿼리 허용 -->
 	<key>LSApplicationQueriesSchemes</key>

@@ -13,3 +13,6 @@ key.properties
 **/*.jks
 
 **/google-services.json
+
+# Android NDK 및 빌드 캐시
+android/app/.cxx/

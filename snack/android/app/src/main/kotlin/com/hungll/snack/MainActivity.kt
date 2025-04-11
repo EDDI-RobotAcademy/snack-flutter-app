@@ -1,4 +1,4 @@
-package com.example.snack
+package com.hungll.snack
 
 import io.flutter.embedding.android.FlutterActivity
 

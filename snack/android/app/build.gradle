@@ -33,7 +33,7 @@ import java.util.Properties
 println "Project Root Directory: ${rootProject.projectDir}"
 
 // .env 파일 경로 확인
-def envFile = file("${project.rootDir}/../.env")  // 프로젝트 루트 디렉토리 com.example.snack
+def envFile = file("${project.rootDir}/../.env")  // 프로젝트 루트 디렉토리 com.hungll.snack
 println ".env file path: ${envFile}"
 
 if (envFile.exists()) {
@@ -56,7 +56,7 @@ apply plugin: 'kotlin-android'
 //apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace = "com.example.snack"
+    namespace = "com.hungll.snack"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -70,57 +70,59 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.snack"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        applicationId = "com.hungll.snack"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
-    def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
-    def debugKeyStorePath = isWindows ? 'C:/Users/son/.android/debug.keystore' : '/home/oem/.android/debug.keystore'
-    def releaseKeyStorePath = isWindows ? 'C:/Users/son/.android/release-key.jks' : '/home/oem/.android/release-key.jks'
+    // ✅ [윈도우만 필요]  윈도우/리눅스 키스토어 경로 설정 부분은 Mac에선 사용하지 않음
+//    def isWindows = System.getProperty("os.name").toLowerCase().contains("win")
+//    def debugKeyStorePath = isWindows ? 'C:/Users/son/.android/debug.keystore' : '/home/oem/.android/debug.keystore'
+//    def releaseKeyStorePath = isWindows ? 'C:/Users/son/.android/release-key.jks' : '/home/oem/.android/release-key.jks'
 
-    println "Debug Keystore Path: ${debugKeyStorePath}"
-    println "Release Keystore Path: ${releaseKeyStorePath}"
+//    println "Debug Keystore Path: ${debugKeyStorePath}"
+//    println "Release Keystore Path: ${releaseKeyStorePath}"
 
     signingConfigs {
         debug {
-            storeFile file(debugKeyStorePath)
-//            storeFile file('/home/oem/.android/debug.keystore')  // debug 키스토어 경로
-            storePassword 'android'                              // debug 키스토어 비밀번호
-            keyAlias 'androiddebugkey'                           // debug 키 별칭
-            keyPassword 'android'                                // debug 키 비밀번호
+            // ✅ [윈도우만 필요]
+//            storeFile file(debugKeyStorePath)
+            // storeFile file('/home/oem/.android/debug.keystore')  // debug 키스토어 경로
+            // storePassword 'android'                              // debug 키스토어 비밀번호
+            // keyAlias 'androiddebugkey'                           // debug 키 별칭
+            // keyPassword 'android'                                // debug 키 비밀번호
         }
 
         release {
-            storeFile file(releaseKeyStorePath)
-//            storeFile file('/home/oem/release-key.jks')         // release 키스토어 경로
-            storePassword 'your_keystore_password'              // release 키스토어 비밀번호
-            keyAlias 'your_key_alias'                           // release 키 별칭
-            keyPassword 'your_key_password'                     // release 키 비밀번호
+            // ✅ [윈도우만 필요]
+//            storeFile file(releaseKeyStorePath)
+            // storeFile file('/home/oem/release-key.jks')         // release 키스토어 경로
+            // storePassword 'your_keystore_password'              // release 키스토어 비밀번호
+            // keyAlias 'your_key_alias'                           // release 키 별칭
+            // keyPassword 'your_key_password'                     // release 키 비밀번호
         }
     }
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug  // debug 빌드에 debug 서명 사용
-            debuggable true                     // 디버그 모드 활성화
+            // ✅ [윈도우만 필요]
+            // signingConfig signingConfigs.debug
+            debuggable true
             manifestPlaceholders = [
                     kakaoAppKey: project.KAKAO_NATIVE_APP_KEY,
                     naverClientId: project.NAVER_CLIENT_ID,
                     naverClientSecret: project.NAVER_CLIENT_SECRET,
                     naverClientName: project.NAVER_CLIENT_NAME,
-                    applicationName: "android.app.Application"  // 추가된 값
+                    applicationName: "android.app.Application"
             ]
         }
 
         release {
-            signingConfig signingConfigs.release  // release 빌드에 release 서명 사용
-            minifyEnabled true                   // 코드 난독화 활성화
+            // ✅ [윈도우만 필요]
+            // signingConfig signingConfigs.release
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [
                     kakaoAppKey: project.KAKAO_NATIVE_APP_KEY,
@@ -128,14 +130,12 @@ android {
                     naverClientSecret: project.NAVER_CLIENT_SECRET,
                     naverClientName: project.NAVER_CLIENT_NAME,
                     applicationName: "android.app.Application"
-                    // 추가된 값
             ]
         }
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.snack"
+        applicationId "com.hungll.snack"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -143,7 +143,7 @@ android {
 
         manifestPlaceholders = [
                 kakaoAppKey: project.KAKAO_NATIVE_APP_KEY,
-                applicationName: "android.app.Application", // 수정
+                applicationName: "android.app.Application",
                 naverClientId: project.NAVER_CLIENT_ID
         ]
     }
@@ -160,4 +160,3 @@ android {
 flutter {
     source = "../.."
 }
-

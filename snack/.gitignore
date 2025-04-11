@@ -46,3 +46,6 @@ app.*.map.json
 
 # iOS
 ios/Runner.xcodeproj/project.pbxproj
+
+# Android NDK 및 빌드 캐시
+android/app/.cxx/
