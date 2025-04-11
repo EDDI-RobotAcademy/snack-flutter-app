@@ -40,12 +40,12 @@ class _HomePageState extends State<HomePage> {
           userNickname = userInfo.kakaoAccount?.profile?.nickname ?? "닉네임 없음";
         });
       } else if (widget.loginType == "Naver") {
-        final naverProvider = Provider.of<NaverAuthProvider>(context, listen: false);
-        final userInfo = await naverProvider.fetchUserInfo();
-        setState(() {
-          userEmail = userInfo.email ?? "이메일 정보 없음";
-          userNickname = userInfo.nickname ?? "닉네임 없음";
-        });
+        // final naverProvider = Provider.of<NaverAuthProvider>(context, listen: false);
+        // final userInfo = await naverProvider.fetchUserInfo();
+        // setState(() {
+        //   userEmail = userInfo.email ?? "이메일 정보 없음";
+        //   userNickname = userInfo.nickname ?? "닉네임 없음";
+        // });
       }
     } catch (error) {
       setState(() {
@@ -62,8 +62,8 @@ class _HomePageState extends State<HomePage> {
       Provider.of<KakaoAuthProvider>(context, listen: false).logout();
     } else if (widget.loginType == "Naver") {
       final naverRemote = Provider.of<NaverAuthRemoteDataSource>(context, listen: false);
-      await naverRemote.logoutFromNaver();
-      Provider.of<NaverAuthProvider>(context, listen: false).logout();
+      // await naverRemote.logoutFromNaver();
+      // Provider.of<NaverAuthProvider>(context, listen: false).logout();
     }
 
     Navigator.pushReplacement(

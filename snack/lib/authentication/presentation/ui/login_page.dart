@@ -4,6 +4,7 @@ import 'package:snack/naver_authentication/presentation/providers/naver_auth_pro
 import 'package:snack/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import '../../../google_authentication/presentation/providers/google_auth_providers.dart';
 import '../../../home/home_module.dart';
+import '../../../naver_authentication/presentation/ui/naver_login_webview_page.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -59,16 +60,11 @@ class LoginPage extends StatelessWidget {
               Consumer<NaverAuthProvider>(
                 builder: (context, naverProvider, child) {
                   return GestureDetector(
-                    onTap: naverProvider.isLoading
-                        ? null
-                        : () async {
-                      await naverProvider.login();
-                      if (naverProvider.isLoggedIn) {
-                        Navigator.pushReplacement(
-                          context,
-                          HomeModule.getHomeRoute(loginType: "Naver"),
-                        );
-                      }
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const NaverLoginWebViewPage()),
+                      );
                     },
                     child: Image.asset(
                       'assets/images/naver_login.png',

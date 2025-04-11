@@ -26,25 +26,25 @@ class NaverAuthModule {
       Provider<NaverAuthRemoteDataSource>(
         create: (_) => NaverAuthRemoteDataSource(baseServerUrl),
       ),
-      ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepositoryImpl>(
-        update: (_, remoteDataSource, __) => NaverAuthRepositoryImpl(remoteDataSource),
-      ),
-      ProxyProvider<NaverAuthRepositoryImpl, NaverLoginUseCaseImpl>(
-        update: (_, repository, __) => NaverLoginUseCaseImpl(repository),
-      ),
-      ProxyProvider<NaverAuthRepositoryImpl, NaverFetchUserInfoUseCaseImpl>(
-        update: (_, repository, __) => NaverFetchUserInfoUseCaseImpl(repository),
-      ),
-      ProxyProvider<NaverAuthRepositoryImpl, NaverRequestUserTokenUseCaseImpl>(
-        update: (_, repository, __) => NaverRequestUserTokenUseCaseImpl(repository),
-      ),
-      ChangeNotifierProvider<NaverAuthProvider>(
-        create: (context) => NaverAuthProvider(
-          loginUseCase: context.read<NaverLoginUseCaseImpl>(),
-          fetchUserInfoUseCase: context.read<NaverFetchUserInfoUseCaseImpl>(),
-          requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
-        ),
-      ),
+      // ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepositoryImpl>(
+      //   update: (_, remoteDataSource, __) => NaverAuthRepositoryImpl(remoteDataSource),
+      // ),
+      // ProxyProvider<NaverAuthRepositoryImpl, NaverLoginUseCaseImpl>(
+      //   update: (_, repository, __) => NaverLoginUseCaseImpl(repository),
+      // ),
+      // ProxyProvider<NaverAuthRepositoryImpl, NaverFetchUserInfoUseCaseImpl>(
+      //   update: (_, repository, __) => NaverFetchUserInfoUseCaseImpl(repository),
+      // ),
+      // ProxyProvider<NaverAuthRepositoryImpl, NaverRequestUserTokenUseCaseImpl>(
+      //   update: (_, repository, __) => NaverRequestUserTokenUseCaseImpl(repository),
+      // ),
+      // ChangeNotifierProvider<NaverAuthProvider>(
+      //   create: (context) => NaverAuthProvider(
+      //     loginUseCase: context.read<NaverLoginUseCaseImpl>(),
+      //     fetchUserInfoUseCase: context.read<NaverFetchUserInfoUseCaseImpl>(),
+      //     requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
+      //   ),
+      // ),
     ];
   }
 }

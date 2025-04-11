@@ -4,7 +4,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
-import 'package:flutter_naver_login/flutter_naver_login.dart';
+// import 'package:flutter_naver_login/flutter_naver_login.dart';
 
 import 'google_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'google_authentication/domain/usecase/google_login_usecase_impl.dart';
@@ -100,35 +100,38 @@ class MyApp extends StatelessWidget {
             requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
           ),
         ),
-        Provider<NaverAuthRemoteDataSource>(
-          create: (_) => NaverAuthRemoteDataSource(baseUrl),
-        ),
-        ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
-          update: (_, remoteDataSource, __) =>
-              NaverAuthRepositoryImpl(remoteDataSource),
-        ),
-        ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
-          update: (_, remoteDataSource, __) =>
-              NaverAuthRepositoryImpl(remoteDataSource),
-        ),
-        ProxyProvider<NaverAuthRepository, NaverLoginUseCaseImpl>(
-          update: (_, repository, __) =>
-              NaverLoginUseCaseImpl(repository),
-        ),
-        ProxyProvider<NaverAuthRepository, NaverFetchUserInfoUseCaseImpl>(
-          update: (_, repository, __) =>
-              NaverFetchUserInfoUseCaseImpl(repository),
-        ),
-        ProxyProvider<NaverAuthRepository, NaverRequestUserTokenUseCaseImpl>(
-          update: (_, repository, __) =>
-              NaverRequestUserTokenUseCaseImpl(repository),
-        ),
+        // Provider<NaverAuthRemoteDataSource>(
+        //   create: (_) => NaverAuthRemoteDataSource(baseUrl),
+        // ),
+        // ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
+        //   update: (_, remoteDataSource, __) =>
+        //       NaverAuthRepositoryImpl(remoteDataSource),
+        // ),
+        // ProxyProvider<NaverAuthRemoteDataSource, NaverAuthRepository>(
+        //   update: (_, remoteDataSource, __) =>
+        //       NaverAuthRepositoryImpl(remoteDataSource),
+        // ),
+        // ProxyProvider<NaverAuthRepository, NaverLoginUseCaseImpl>(
+        //   update: (_, repository, __) =>
+        //       NaverLoginUseCaseImpl(repository),
+        // ),
+        // ProxyProvider<NaverAuthRepository, NaverFetchUserInfoUseCaseImpl>(
+        //   update: (_, repository, __) =>
+        //       NaverFetchUserInfoUseCaseImpl(repository),
+        // ),
+        // ProxyProvider<NaverAuthRepository, NaverRequestUserTokenUseCaseImpl>(
+        //   update: (_, repository, __) =>
+        //       NaverRequestUserTokenUseCaseImpl(repository),
+        // ),
+        // ChangeNotifierProvider<NaverAuthProvider>(
+        //   create: (context) => NaverAuthProvider(
+        //     loginUseCase: context.read<NaverLoginUseCaseImpl>(),
+        //     fetchUserInfoUseCase: context.read<NaverFetchUserInfoUseCaseImpl>(),
+        //     requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
+        //   ),
+        // ),
         ChangeNotifierProvider<NaverAuthProvider>(
-          create: (context) => NaverAuthProvider(
-            loginUseCase: context.read<NaverLoginUseCaseImpl>(),
-            fetchUserInfoUseCase: context.read<NaverFetchUserInfoUseCaseImpl>(),
-            requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
-          ),
+          create: (_) => NaverAuthProvider(),
         ),
         Provider<GoogleAuthRemoteDataSource>(
           create: (_) => GoogleAuthRemoteDataSource(baseUrl),
@@ -167,6 +170,17 @@ class MyApp extends StatelessWidget {
           Locale('en', 'US'),
           Locale('ko', 'KR'),
         ],
+        // home: Consumer2<KakaoAuthProvider, NaverAuthProvider>(
+        //   builder: (context, kakaoProvider, naverProvider, child) {
+        //     if (kakaoProvider.isLoggedIn) {
+        //       return HomePage(loginType: "Kakao");
+        //     } else if (naverProvider.isLoggedIn) {
+        //       return HomePage(loginType: "Naver");
+        //     } else {
+        //       return LoginPage();
+        //     }
+        //   },
+        // ),
         home: Consumer2<KakaoAuthProvider, NaverAuthProvider>(
           builder: (context, kakaoProvider, naverProvider, child) {
             if (kakaoProvider.isLoggedIn) {
