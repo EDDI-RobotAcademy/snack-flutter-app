@@ -38,7 +38,7 @@ dependencies:
   provider: ^6.1.2
   flutter_dotenv: ^5.2.1
 
-  flutter_naver_login: ^2.0.0
+  #flutter_naver_login: ^2.0.0
   #flutter_web_auth: ^0.4.0 # OAuth 인증을 위한 패키지
   kakao_flutter_sdk: ^1.9.6
   flutter_secure_storage: ^9.2.4
@@ -107,7 +107,7 @@ flutter:
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
-  # example:
+  # hungll:
   # fonts:
   #   - family: Schyler
   #     fonts:
