@@ -6,7 +6,8 @@ class GoogleAuthRemoteDataSource {
 
   GoogleAuthRemoteDataSource(this.baseUrl);
 
-  Future<String> requestUserToken(String accessToken, String email, String nickname) async {
+  Future<String> requestUserToken(String accessToken, String email,
+      String nickname) async {
     final url = Uri.parse('$baseUrl/google-oauth/request-user-token');
 
     final response = await http.post(
@@ -31,3 +32,4 @@ class GoogleAuthRemoteDataSource {
       throw Exception('유저 토큰 요청 실패');
     }
   }
+}
