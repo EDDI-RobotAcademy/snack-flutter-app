@@ -13,8 +13,11 @@ class GoogleAuthRepositoryImpl implements GoogleAuthRepository {
     final auth = await account?.authentication;
     final accessToken = auth?.accessToken;
 
+    final email = account?.email;
+    final nickname = account?.displayName;
+
     if (accessToken != null) {
-      final userToken = await remoteDataSource.requestUserToken(accessToken);
+      final userToken = await remoteDataSource.requestUserToken(accessToken, email!, nickname!);
       return userToken;
     } else {
       throw Exception("Google 로그인 실패");

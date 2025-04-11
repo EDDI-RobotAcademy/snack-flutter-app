@@ -2,6 +2,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:snack/google_authentication/presentation/providers/google_auth_providers.dart';
 
 import 'infrastructure/data_sources/google_auth_remote_data_source.dart';
 import 'infrastructure/repository/google_auth_repository.dart';
@@ -14,8 +15,6 @@ import 'domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'domain/usecase/request_user_token_usecase.dart';
 import 'domain/usecase/request_user_token_usecase_impl.dart';
 
-import 'presentation/providers/google_auth_provider.dart';
-
 class GoogleAuthModule {
   static List<SingleChildWidget> provideGoogleProviders() {
     dotenv.load();
@@ -25,7 +24,7 @@ class GoogleAuthModule {
     final repository = GoogleAuthRepositoryImpl(remoteDataSource);
 
     final loginUseCase = GoogleLoginUseCaseImpl(repository);
-    final fetchUserInfoUseCase = FetchGoogleUserInfoUseCaseImpl();
+    final fetchUserInfoUseCase = FetchGoogleUserInfoUseCaseImpl(repository);
     final requestUserTokenUseCase = RequestGoogleUserTokenUseCaseImpl(remoteDataSource);
 
     return [
@@ -37,8 +36,8 @@ class GoogleAuthModule {
       ChangeNotifierProvider<GoogleAuthProvider>(
         create: (context) => GoogleAuthProvider(
           loginUseCase: context.read<GoogleLoginUseCase>(),
-          fetchUserInfoUseCase: context.read<FetchGoogleUserInfoUseCase>(),
-          requestUserTokenUseCase: context.read<RequestGoogleUserTokenUseCase>(),
+          // fetchUserInfoUseCase: context.read<FetchGoogleUserInfoUseCase>(),
+          // requestUserTokenUseCase: context.read<RequestGoogleUserTokenUseCase>(),
         ),
       ),
     ];

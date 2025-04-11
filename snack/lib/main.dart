@@ -6,6 +6,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 
+import 'google_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
+import 'google_authentication/domain/usecase/google_login_usecase_impl.dart';
+import 'google_authentication/infrastructure/data_sources/google_auth_remote_data_source.dart';
+import 'google_authentication/infrastructure/repository/google_auth_repository.dart';
+import 'google_authentication/infrastructure/repository/google_auth_repository_impl.dart';
+import 'google_authentication/presentation/providers/google_auth_providers.dart';
 import 'home/presentation/ui/home_page.dart';
 import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/login_usecase_impl.dart';
@@ -122,6 +128,26 @@ class MyApp extends StatelessWidget {
             loginUseCase: context.read<NaverLoginUseCaseImpl>(),
             fetchUserInfoUseCase: context.read<NaverFetchUserInfoUseCaseImpl>(),
             requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
+          ),
+        ),
+        Provider<GoogleAuthRemoteDataSource>(
+          create: (_) => GoogleAuthRemoteDataSource(baseUrl),
+        ),
+        ProxyProvider<GoogleAuthRemoteDataSource, GoogleAuthRepository>(
+          update: (_, remoteDataSource, __) =>
+              GoogleAuthRepositoryImpl(remoteDataSource),
+        ),
+        ProxyProvider<GoogleAuthRepository, GoogleLoginUseCaseImpl>(
+          update: (_, repository, __) => GoogleLoginUseCaseImpl(repository),
+        ),
+        ProxyProvider<GoogleAuthRepository, FetchGoogleUserInfoUseCaseImpl>(
+          update: (_, repository, __) =>
+              FetchGoogleUserInfoUseCaseImpl(repository),
+        ),
+        ChangeNotifierProvider<GoogleAuthProvider>(
+          create: (context) => GoogleAuthProvider(
+            loginUseCase: context.read<GoogleLoginUseCaseImpl>(),
+            // fetchUserInfoUseCase: context.read<FetchGoogleUserInfoUseCaseImpl>(),
           ),
         ),
       ],
