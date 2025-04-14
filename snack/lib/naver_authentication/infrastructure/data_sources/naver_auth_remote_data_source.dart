@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 // import 'package:flutter_naver_login/flutter_naver_login.dart';
-import 'package:snack/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'package:snack/kakao_authentication/infrastructure/data_sources/kakao_auth_remote_data_source.dart';
 
 class NaverAuthRemoteDataSource {
   final String baseUrl;

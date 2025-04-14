@@ -11,7 +11,7 @@ import 'domain/usecase/naver_request_user_token_usecase_impl.dart';
 import 'infrastructure/data_sources/naver_auth_remote_data_source.dart';
 import 'infrastructure/repository/naver_auth_repository.dart';
 import 'infrastructure/repository/naver_auth_repository_impl.dart';
-import 'package:snack/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'package:snack/kakao_authentication/infrastructure/data_sources/kakao_auth_remote_data_source.dart';
 
 class NaverAuthModule {
   static List<SingleChildWidget> provideNaverProviders() {

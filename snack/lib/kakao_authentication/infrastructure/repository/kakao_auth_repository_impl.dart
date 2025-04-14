@@ -1,4 +1,4 @@
-import 'package:snack/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'package:snack/kakao_authentication/infrastructure/data_sources/kakao_auth_remote_data_source.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'kakao_auth_repository.dart';
 
