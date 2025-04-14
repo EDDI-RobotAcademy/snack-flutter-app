@@ -1,5 +1,6 @@
+import 'package:snack/google_authentication/infrastructure/data_sources/google_auth_remote_data_source.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../data_sources/google_auth_remote_data_source.dart';
+
 import 'google_auth_repository.dart';
 
 class GoogleAuthRepositoryImpl implements GoogleAuthRepository {
@@ -8,19 +9,48 @@ class GoogleAuthRepositoryImpl implements GoogleAuthRepository {
   GoogleAuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<String> loginWithGoogle() async {
-    final account = await GoogleSignIn().signIn();
-    final auth = await account?.authentication;
-    final accessToken = auth?.accessToken;
+  Future<String> login() async {
+    print("GoogleAuthRepositoryImpl login()");
+    return await remoteDataSource.loginWithGoogle() ?? '';
+  }
 
-    final email = account?.email;
-    final nickname = account?.displayName;
+  @override
+  Future<void> logout() async {
+    print("GoogleAuthRepositoryImpl logout()");
+    return await remoteDataSource.logoutWithGoogle();
+  }
 
-    if (accessToken != null) {
-      final userToken = await remoteDataSource.requestUserToken(accessToken, email!, nickname!);
+  @override
+  Future<GoogleSignInAccount?> fetchUserInfo() async {
+    return await remoteDataSource.fetchUserInfoFromGoogle();
+  }
+
+  @override
+  Future<String> requestUserToken(
+      String accessToken,
+      String userId,
+      String email,
+      String nickname,
+      String gender,
+      String ageRange,
+      String birthyear,
+      ) async {
+    print("Requesting user token with accessToken: $accessToken, user_id: $userId, email: $email, nickname: $nickname");
+    try {
+      final userToken = await remoteDataSource.requestUserTokenFromServer(
+        accessToken,
+        userId,
+        email,
+        nickname,
+        gender,
+        ageRange,
+        birthyear,
+      );
+      print("User token obtained: $userToken");
       return userToken;
-    } else {
-      throw Exception("Google 로그인 실패");
+    } catch (e) {
+      print("Error during requesting user token: $e");
+      throw Exception("Failed to request user token: $e");
     }
   }
 }

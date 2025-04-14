@@ -8,6 +8,7 @@ class GoogleLoginUseCaseImpl implements GoogleLoginUseCase {
 
   @override
   Future<String> execute() async {
-    return await repository.loginWithGoogle();
+    print("GoogleLoginUseCaseImpl execute()");
+    return await repository.login();
   }
 }
