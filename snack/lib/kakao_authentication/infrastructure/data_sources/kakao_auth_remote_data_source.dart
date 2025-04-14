@@ -25,6 +25,22 @@ class KakaoAuthRemoteDataSource {
     }
   }
 
+  Future<void> logoutWithKakao() async {
+    try {
+      if (await isKakaoTalkInstalled()) {
+        await UserApi.instance.logout();
+        print('카카오톡으로 로그아웃 실행');
+      } else {
+        await UserApi.instance.logout();
+        print('카카오 계정으로 로그아웃 실행');
+      }
+
+    } catch (error) {
+      print("로그인 실패: $error");
+      throw Exception("Kakao 로그아웃 실패!");
+    }
+  }
+
   // 카카오 API에서 사용자 정보를 가져오는 메서드
   Future<User> fetchUserInfoFromKakao() async {
     try {
@@ -79,14 +95,4 @@ class KakaoAuthRemoteDataSource {
       return '';
     }
   }
-
-  Future<void> logoutFromKakao() async {
-    try {
-      await UserApi.instance.logout();
-      print("Kakao 로그아웃 성공");
-    } catch (error) {
-      print("Kakao 로그아웃 실패: $error");
-    }
-  }
-
 }

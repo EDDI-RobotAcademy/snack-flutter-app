@@ -1,7 +1,9 @@
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:snack/kakao_authentication/domain/usecase/login_usecase.dart';
+import 'package:snack/kakao_authentication/domain/usecase/logout_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:snack/kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 
 import '../../domain/usecase/fetch_user_info_usecase.dart';
 import '../../domain/usecase/request_user_token_usecase.dart';
@@ -9,6 +11,7 @@ import '../../domain/usecase/request_user_token_usecase.dart';
 
 class KakaoAuthProvider with ChangeNotifier {
   final LoginUseCase loginUseCase;
+  final LogoutUseCase logoutUseCase;
   final FetchUserInfoUseCase fetchUserInfoUseCase;
   final RequestUserTokenUseCase requestUserTokenUseCase;
 
@@ -28,6 +31,7 @@ class KakaoAuthProvider with ChangeNotifier {
 
   KakaoAuthProvider({
     required this.loginUseCase,
+    required this.logoutUseCase,
     required this.fetchUserInfoUseCase,
     required this.requestUserTokenUseCase,
   }); // 객체 의존성 주입 받아 초기화
@@ -38,12 +42,9 @@ class KakaoAuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      print("Kakao loginUseCase.execute()");
       _accessToken = await loginUseCase.execute();
-      print("AccessToken obtained: $_accessToken");
 
       final userInfo = await fetchUserInfoUseCase.execute();
-      print("User Info fetched: $userInfo");
 
       final email = userInfo.kakaoAccount?.email;
       final nickname = userInfo.kakaoAccount?.profile?.nickname;
@@ -83,14 +84,21 @@ class KakaoAuthProvider with ChangeNotifier {
   }
 
 
+  // 로그아웃 처리
   Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();  // 상태 변경 알림
+
     try {
-      await UserApi.instance.logout();
+      await logoutUseCase.execute();
       await secureStorage.delete(key: 'userToken');
       _isLoggedIn = false;
-      notifyListeners();
+      _accessToken = null;
+      _userToken = null;
+      _message = '로그아웃 완료';
+
     } catch (e) {
-      print("Kakao 로그아웃 실패: $e");
+      _message = "로그아웃 실패: $e";
     }
   }
 }
