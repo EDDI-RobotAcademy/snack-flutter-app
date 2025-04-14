@@ -1,4 +1,4 @@
-import '../../infrasturcture/repository/kakao_auth_repository.dart';
+import '../../infrastructure/repository/kakao_auth_repository.dart';
 import 'login_usecase.dart';
 
 class LoginUseCaseImpl implements LoginUseCase {

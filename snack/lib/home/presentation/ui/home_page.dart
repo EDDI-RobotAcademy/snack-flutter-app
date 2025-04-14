@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:snack/home/home_module.dart';
-import 'package:snack/kakao_authentication/infrasturcture/data_sources/kakao_auth_remote_data_source.dart';
+import 'package:snack/kakao_authentication/infrastructure/data_sources/kakao_auth_remote_data_source.dart';
 import 'package:snack/authentication/presentation/ui/login_page.dart';
 import 'package:snack/common_ui/custom_bottom_nav_bar.dart';
 
