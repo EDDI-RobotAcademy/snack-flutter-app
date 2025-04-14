@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
   void _logout() async {
     if (widget.loginType == "Kakao") {
       final kakaoRemote = Provider.of<KakaoAuthRemoteDataSource>(context, listen: false);
-      await kakaoRemote.logoutFromKakao();
+      await kakaoRemote.logoutWithKakao();
       Provider.of<KakaoAuthProvider>(context, listen: false).logout();
     } else if (widget.loginType == "Naver") {
       final naverRemote = Provider.of<NaverAuthRemoteDataSource>(context, listen: false);
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
-          SizedBox(height: 20), // 간격 추
+          SizedBox(height: 20), // 간격 추가
           // ✅ 검색창 UI
           Container(
             margin: EdgeInsets.symmetric(horizontal: 30),

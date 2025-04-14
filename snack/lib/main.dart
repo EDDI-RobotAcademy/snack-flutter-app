@@ -13,6 +13,7 @@ import 'home/home_module.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'kakao_authentication/domain/usecase/fetch_user_info_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/login_usecase_impl.dart';
+import 'kakao_authentication/domain/usecase/logout_usecase_impl.dart';
 import 'kakao_authentication/domain/usecase/request_user_token_usecase_impl.dart';
 import 'kakao_authentication/infrastructure/data_sources/kakao_auth_remote_data_source.dart';
 import 'kakao_authentication/infrastructure/repository/kakao_auth_repository.dart';
@@ -89,6 +90,9 @@ class MyApp extends StatelessWidget {
         ProxyProvider<KakaoAuthRepository, LoginUseCaseImpl>(
           update: (_, repository, __) => LoginUseCaseImpl(repository),
         ),
+        ProxyProvider<KakaoAuthRepository, LogoutUseCaseImpl>(
+          update: (_, repository, __) => LogoutUseCaseImpl(repository),
+        ),
         ProxyProvider<KakaoAuthRepository, FetchUserInfoUseCaseImpl>(
           update: (_, repository, __) => FetchUserInfoUseCaseImpl(repository),
         ),
@@ -99,6 +103,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<KakaoAuthProvider>(
           create: (context) => KakaoAuthProvider(
             loginUseCase: context.read<LoginUseCaseImpl>(),
+            logoutUseCase: context.read<LogoutUseCaseImpl>(),
             fetchUserInfoUseCase: context.read<FetchUserInfoUseCaseImpl>(),
             requestUserTokenUseCase: context.read<RequestUserTokenUseCaseImpl>(),
           ),
