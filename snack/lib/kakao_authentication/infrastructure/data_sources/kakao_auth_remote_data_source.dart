@@ -25,8 +25,9 @@ class KakaoAuthRemoteDataSource {
     }
   }
 
-  Future<void> logoutWithKakao() async {
+  Future<void> logoutWithKakao(String userToken) async {
     try {
+      // 플러터 로컬 로그아웃
       if (await isKakaoTalkInstalled()) {
         await UserApi.instance.logout();
         print('카카오톡으로 로그아웃 실행');
@@ -35,9 +36,35 @@ class KakaoAuthRemoteDataSource {
         print('카카오 계정으로 로그아웃 실행');
       }
 
+      // 백엔드 서버에 로그아웃 요청
+      print("📦 보낼 userToken: $userToken");
+      final url = Uri.parse('$baseUrl/authentication/kakao-logout');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $userToken',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({ 'userToken': userToken }),
+      );
+
+      if (response.statusCode == 200) {
+        print("✅ 백엔드 로그아웃 성공");
+      } else {
+        print("❌ 백엔드 로그아웃 실패: ${response.statusCode}, ${response.body}");
+      }
+
     } catch (error) {
-      print("로그인 실패: $error");
-      throw Exception("Kakao 로그아웃 실패!");
+      // 로그아웃 중 오류 발생 - 예: 네트워크 오류, SDK 내부 오류 등
+      print('로그아웃 중 예외 발생: $error');
+
+      // 특정 로그: 이미 로그아웃된 상태에서 재로그아웃 시 나오는 메시지 제거
+      if (error.toString().contains("authentication token doesn't exist")) {
+        print('ℹ️ [무시됨] 이미 로그아웃된 상태입니다.');
+      } else {
+        throw Exception("Kakao 로그아웃 실패: $error");
+      }
     }
   }
 
@@ -67,7 +94,7 @@ class KakaoAuthRemoteDataSource {
       'role_type': roleType,
     });
 
-    print('Request Data: $requestData'); //전송할 데이터 확인
+    print('Request Data: $requestData');
 
     try {
       final response = await http.post(
@@ -80,18 +107,24 @@ class KakaoAuthRemoteDataSource {
       );
 
       print('Server response status: ${response.statusCode}');
+      print('Server response headers: ${response.headers}');
       print('Server response body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        return data['userToken'] ?? '';
+        final userToken = response.headers['usertoken']; // ✅ 헤더에서 추출
+        if (userToken != null && userToken.isNotEmpty) {
+          print('✅ userToken from header: $userToken');
+          return userToken;
+        } else {
+          print('❌ 응답 헤더에 userToken 없음');
+          return '';
+        }
       } else {
-        print('Error: Failed to request user token, status code: ${response
-            .statusCode}');
-        return ''; // 예외 발생 시 빈 문자열 반환
+        print('❌ 서버 응답 실패. 상태 코드: ${response.statusCode}');
+        return '';
       }
     } catch (error) {
-      print('Error during request to server: $error');
+      print('❌ 서버 요청 중 에러: $error');
       return '';
     }
   }

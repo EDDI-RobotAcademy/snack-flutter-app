@@ -1,3 +1,3 @@
 abstract class LogoutUseCase {
-  Future<void> execute();
+  Future<void> execute(String userToken);
 }
