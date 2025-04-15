@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:snack/home/home_module.dart';
-import 'package:snack/kakao_authentication/infrastructure/data_sources/kakao_auth_remote_data_source.dart';
-import 'package:snack/authentication/presentation/ui/login_page.dart';
 import 'package:snack/common_ui/custom_bottom_nav_bar.dart';
 
-
+import 'package:snack/kakao_authentication/infrastructure/data_sources/kakao_auth_remote_data_source.dart';
+import 'package:snack/authentication/presentation/ui/login_page.dart';
 import '../../../kakao_authentication/presentation/providers/kakao_auth_providers.dart';
+
 import '../../../naver_authentication/infrastructure/data_sources/naver_auth_remote_data_source.dart';
 import '../../../naver_authentication/presentation/providers/naver_auth_providers.dart';
 
@@ -21,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
   String userEmail = "이메일을 불러오는 중...";
   String userNickname = "";
 
@@ -58,17 +61,29 @@ class _HomePageState extends State<HomePage> {
   void _logout() async {
     if (widget.loginType == "Kakao") {
       final kakaoRemote = Provider.of<KakaoAuthRemoteDataSource>(context, listen: false);
-      await kakaoRemote.logoutWithKakao();
-      Provider.of<KakaoAuthProvider>(context, listen: false).logout();
+      final kakaoProvider = Provider.of<KakaoAuthProvider>(context, listen: false);
+
+      // secureStorage에서 userToken 읽기
+      final userToken = await secureStorage.read(key: 'userToken');
+
+      // 로그아웃 요청
+      if (userToken != null) {
+        await kakaoRemote.logoutWithKakao(userToken);
+      }
+      // provider 상태 완전 초기화
+      kakaoProvider.logout();
+
     } else if (widget.loginType == "Naver") {
       final naverRemote = Provider.of<NaverAuthRemoteDataSource>(context, listen: false);
       // await naverRemote.logoutFromNaver();
       // Provider.of<NaverAuthProvider>(context, listen: false).logout();
     }
 
-    Navigator.pushReplacement(
+    // 로그아웃 이후 로그인 페이지 이동 pushAndRemoveUntil->앱 흐름 초기화
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
+          (route) => false, //false면 모든 이전 라우트 제거
     );
   }
 

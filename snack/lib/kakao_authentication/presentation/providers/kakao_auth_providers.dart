@@ -34,7 +34,25 @@ class KakaoAuthProvider with ChangeNotifier {
     required this.logoutUseCase,
     required this.fetchUserInfoUseCase,
     required this.requestUserTokenUseCase,
-  }); // 객체 의존성 주입 받아 초기화
+  }){
+    _initAuthState(); // 앱 시작 시 로그인 상태 확인
+  }
+
+  // 초기 로그인 상태 확인
+  Future<void> _initAuthState() async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      _userToken = await secureStorage.read(key: 'userToken');
+      _isLoggedIn = _userToken != null;
+      print("초기 로그인 상태: $_isLoggedIn");
+    } catch (e) {
+      print("초기화 오류: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<void> login() async {
     _isLoading = true;
@@ -49,10 +67,11 @@ class KakaoAuthProvider with ChangeNotifier {
       final email = userInfo.kakaoAccount?.email;
       final nickname = userInfo.kakaoAccount?.profile?.nickname;
 
-      final accountPath = "Kakao";  // ✅ 추가
-      final roleType = "USER";  // ✅ 추가
+      final accountPath = "Kakao";
+      final roleType = "USER";
 
-      print("User email: $email, User nickname: $nickname, Account Path: $accountPath, Role Type: $roleType");
+      print(
+          "User email: $email, User nickname: $nickname, Account Path: $accountPath, Role Type: $roleType");
 
       _userToken = await requestUserTokenUseCase.execute(
           _accessToken!, email!, nickname!, accountPath, roleType);
@@ -60,17 +79,20 @@ class KakaoAuthProvider with ChangeNotifier {
       print("User Token obtained: $_userToken");
 
       await secureStorage.write(key: 'userToken', value: _userToken);
+      print("✅ 저장된 userToken: $_userToken");
+
 
       _isLoggedIn = true;
       _message = '로그인 성공';
-      print("Login successful");
+
+      await _initAuthState();
     } catch (e) {
       _isLoggedIn = false;
       _message = "로그인 실패: $e";
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
   Future<User> fetchUserInfo() async {
@@ -90,15 +112,23 @@ class KakaoAuthProvider with ChangeNotifier {
     notifyListeners();  // 상태 변경 알림
 
     try {
-      await logoutUseCase.execute();
+      final token = await secureStorage.read(key: 'userToken');
+      if (token != null) {
+        await logoutUseCase.execute(token); // userToken 전달
+      }
+
       await secureStorage.delete(key: 'userToken');
       _isLoggedIn = false;
       _accessToken = null;
       _userToken = null;
       _message = '로그아웃 완료';
 
+      await _initAuthState();
     } catch (e) {
       _message = "로그아웃 실패: $e";
+    } finally {
+      _isLoading = false;
+      notifyListeners();  // 상태 변경 알림
     }
   }
 }
