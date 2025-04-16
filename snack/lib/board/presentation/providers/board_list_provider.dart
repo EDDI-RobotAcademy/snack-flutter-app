@@ -13,12 +13,9 @@ class BoardListProvider with ChangeNotifier {
   int totalPages = 0;
   int currentPage = 1;
 
-  BoardListProvider({
-    required this.listBoardUseCase
-  });
+  BoardListProvider({required this.listBoardUseCase});
 
-  // Nuxt에서 Action에서 사용했던 Promise와 같은 역할임
-  Future<void> listBoard(int page, int perPage) async {
+  Future<void> listBoard(int page, int perPage, {bool append = false}) async {
     if (isLoading) return;
 
     isLoading = true;
@@ -27,16 +24,20 @@ class BoardListProvider with ChangeNotifier {
     try {
       final boardListResponse = await listBoardUseCase.call(page, perPage);
 
-      if (boardListResponse.boardList.isEmpty) {
+      if (boardListResponse.boardList.isEmpty && page == 1) {
         message = '등록된 내용이 없습니다';
       } else {
-        boardList = boardListResponse.boardList;
+        if (append) {
+          boardList.addAll(boardListResponse.boardList);
+        } else {
+          boardList = boardListResponse.boardList;
+        }
         totalItems = boardListResponse.totalItems;
         totalPages = boardListResponse.totalPages;
         currentPage = page;
       }
     } catch (e) {
-      message = '게시글을 가져오는 중 문제가 발생했습니다';
+      message = '게시글을 불러오는 중 문제가 발생했습니다';
     }
 
     isLoading = false;
