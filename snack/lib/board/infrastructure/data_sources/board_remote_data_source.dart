@@ -1,8 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'package:snack/board/domain/entity/board.dart';
 import 'package:snack/board/domain/usecases/list/response/board_list_response.dart';
 
@@ -12,47 +9,57 @@ class BoardRemoteDataSource {
   BoardRemoteDataSource(this.baseUrl);
 
   Future<BoardListResponse> listBoard(int page, int perPage) async {
-    final parsedUri =
-    Uri.parse('$baseUrl/board/list?page=$page&perPage=$perPage');
+    final uri = Uri.parse('$baseUrl/board/all/?page=$page&per_page=$perPage');
+    final response = await http.get(uri);
 
-    final boardListResponse = await http.get(parsedUri);
-
-    if (boardListResponse.statusCode == 200) {
-      final data = json.decode(boardListResponse.body);
-
-      List<Board> boardList = (data['dataList'] as List)
-          .map((data) =>
-          Board(
-            id: data['boardId'] ?? 0,
-            title: data['title'],
-            content: data['content'],
-            imageUrl: data['image_url'] ?? '',
-            author: data['author'],
-            createdAt: DateTime.parse(data['created_at']),
-            updatedAt: DateTime.parse(data['updated_at']),
-            endTime: DateTime.parse(data['end_time']),
-            status: data['status'],
-            restaurant: data['restaurant'] ?? '',
-          )
-      )
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List<Board> boardList = (data['boards'] as List)
+          .map((item) => Board.fromJson(item))
           .toList();
-      int totalItems = parseInt(data['totalItems']);
-      int totalPages = parseInt(data['totalPages']);
 
       return BoardListResponse(
-          boardList: boardList,
-          totalItems: totalItems,
-          totalPages: totalPages
+        boardList: boardList,
+        totalItems: data['boards'].length,
+        totalPages: data['total_pages'],
       );
     } else {
-      throw Exception('게시물 리스트 조회 실패');
+      throw Exception('게시글 목록을 불러오지 못했습니다.');
     }
   }
-  int parseInt(dynamic value) {
-    if (value is String) {
-      return int.tryParse(value) ?? 0;
-    }
 
-    return value ?? 0;
+  // ✅ 게시글 생성 API 요청
+  Future<Board> createBoard({
+    required String title,
+    required String content,
+    required String userToken,
+    required DateTime endTime,
+    String? imageUrl,
+    String? restaurant,
+  }) async {
+    final uri = Uri.parse('$baseUrl/board/create/');
+    final body = json.encode({
+      'title': title,
+      'content': content,
+      'image_url': imageUrl ?? '',
+      'end_time': endTime.toIso8601String(),
+      'restaurant': restaurant,
+    });
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $userToken',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 201) {
+      final data = json.decode(response.body);
+      return Board.fromJson(data);
+    } else {
+      throw Exception('게시글 등록 실패: ${response.body}');
+    }
   }
 }

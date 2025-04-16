@@ -3,4 +3,12 @@ import 'package:snack/board/domain/usecases/list/response/board_list_response.da
 
 abstract class BoardRepository {
   Future<BoardListResponse> listBoard(int page, int perPage);
+  Future<Board> createBoard({
+    required String userToken,
+    required String title,
+    required String content,
+    String? imageUrl,
+    required DateTime endTime,
+    String? restaurant,
+  });
 }
