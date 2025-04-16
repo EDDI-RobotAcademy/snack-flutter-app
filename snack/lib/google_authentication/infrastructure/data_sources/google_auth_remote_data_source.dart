@@ -84,26 +84,25 @@ class GoogleAuthRemoteDataSource {
         body: json.encode({
           'access_token': accessToken,
           'email': email,
-          'nickname': nickname,
-          'user_id': userId,
-          'gender': gender,               // 'unknown' 가능
-          'age_range': ageRange,          // 'N/A' 가능
-          'birthyear': birthyear,         // 예: '2000'
-          'birthday': '01-01',            // 임의로라도 기본값 필수 (예: 생일 모를 땐 '01-01')
+          'account_path': 'Google',
+          'role_type': 'USER',
           'phone_num': '',
           'address': '',
+          'gender': 'unknown',
+          'birthyear': '0000',         // 예: '2000'
+          'birthday': '01-01',         // 임의로라도 기본값 필수 (예: 생일 모를 땐 '01-01')
           'payment': '',
           'subscribed': false,
-          'name': nickname
-          // 'access_token': accessToken,
+          'name': nickname,
+          'nickname': nickname,
+          'user_id': userId,
+          'age_range':  'N/A',
+
+
           // 'email': email,
           // 'nickname': nickname,
           // 'user_id': userId,
-          // 'gender': 'unknown',
-          // 'age_range': 'N/A',
-          // 'birthyear': '0000'
-          // // 'account_path': 'Google',
-          // // 'role_type': 'USER',
+
         }),
       );
 

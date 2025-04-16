@@ -84,7 +84,7 @@ class GoogleAuthProvider with ChangeNotifier {
       _message = '로그인 성공';
       print("accesstoken:${_accessToken}");
 
-      await _initAuthState();     // 로그인 검증, 상태 확인
+      //await _initAuthState();     // 로그인 검증, 상태 확인
     } catch (e) {
       _isLoggedIn = false;
       _message = "로그인 실패: $e";
