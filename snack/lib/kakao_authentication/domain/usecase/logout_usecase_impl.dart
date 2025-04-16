@@ -9,7 +9,6 @@ class LogoutUseCaseImpl implements LogoutUseCase {
 
   @override
   Future<void> execute(String userToken) async {
-    print("LogoutUseCaseImpl execute()");
     await repository.logout(userToken);
   }
 }
