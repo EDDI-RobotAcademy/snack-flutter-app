@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../domain/usecase/google_login_usecase.dart';
 import '../../domain/usecase/google_logout_usecase.dart';
 import '../../domain/usecase/google_fetch_user_info_usecase.dart';
@@ -91,6 +92,16 @@ class GoogleAuthProvider with ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<GoogleSignInAccount?> fetchUserInfo() async {
+    try {
+      final userInfo = await fetchUserInfoUseCase.execute();
+      return userInfo;
+    } catch (e) {
+      print("Google 사용자 정보 불러오기 실패: $e");
+      rethrow;
     }
   }
 

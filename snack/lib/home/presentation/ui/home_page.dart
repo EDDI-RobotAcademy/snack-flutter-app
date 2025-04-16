@@ -13,6 +13,8 @@ import '../../../kakao_authentication/presentation/providers/kakao_auth_provider
 import '../../../naver_authentication/infrastructure/data_sources/naver_auth_remote_data_source.dart';
 import '../../../naver_authentication/presentation/providers/naver_auth_providers.dart';
 
+import '../../../google_authentication/presentation/providers/google_auth_providers.dart';
+
 class HomePage extends StatefulWidget {
   final String loginType;
 
@@ -51,7 +53,17 @@ class _HomePageState extends State<HomePage> {
         //   userEmail = userInfo.email ?? "이메일 정보 없음";
         //   userNickname = userInfo.nickname ?? "닉네임 없음";
         // });
+      } else if (widget.loginType == "Google") {
+        final googleProvider = Provider.of<GoogleAuthProvider>(context, listen: false);
+        final userInfo = await googleProvider.fetchUserInfo();
+
+        if (!mounted) return;
+        setState(() {
+          userEmail = userInfo?.email ?? "";
+          userNickname = userInfo?.displayName ?? "";
+        });
       }
+
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -80,7 +92,11 @@ class _HomePageState extends State<HomePage> {
       final naverRemote = Provider.of<NaverAuthRemoteDataSource>(context, listen: false);
       // await naverRemote.logoutFromNaver();
       // Provider.of<NaverAuthProvider>(context, listen: false).logout();
+    } else if (widget.loginType == "Google") {
+      final googleProvider = Provider.of<GoogleAuthProvider>(context, listen: false);
+      await googleProvider.logout();
     }
+
 
     // 로그아웃 이후 로그인 페이지 이동 pushAndRemoveUntil->앱 흐름 초기화
     Navigator.pushAndRemoveUntil(
