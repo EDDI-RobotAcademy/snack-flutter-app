@@ -17,7 +17,15 @@ class GoogleRequestUserTokenUseCaseImpl implements GoogleRequestUserTokenUseCase
       String birthyear) async {
     try {
       // Django 서버로 요청하여 User Token 반환
-      final userToken = await repository.requestUserToken(accessToken, userId, email, nickname, gender, ageRange, birthyear);
+      final userToken = await repository.requestUserToken(
+          accessToken,
+          userId,
+          email,
+          nickname,
+          gender,
+          ageRange,
+          birthyear,
+      );
       print("User token obtained: $userToken");
       return userToken;
     } catch (error) {

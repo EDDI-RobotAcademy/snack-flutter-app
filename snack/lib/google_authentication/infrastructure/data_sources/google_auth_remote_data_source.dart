@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class GoogleAuthRemoteDataSource {
   final String baseUrl;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: dotenv.env['GOOGLE_IOS_CLIENT_ID'],
+    scopes: ['email', 'profile'],
+  );
 
   GoogleAuthRemoteDataSource(this.baseUrl);
 
@@ -29,7 +34,7 @@ class GoogleAuthRemoteDataSource {
       await _googleSignIn.signOut();
       print("Google 로그아웃 성공!");
     } catch (error) {
-      print("로그인 실패: $error");
+      print("로그아웃 실패: $error");
       throw Exception("Google 로그아웃 실패!");
     }
   }
@@ -41,7 +46,7 @@ class GoogleAuthRemoteDataSource {
 
       if (user == null) {
         print("현재 로그인된 Google 사용자가 없음, 자동 로그인 시도");
-        user = await _googleSignIn.signInSilently();
+        user = await _googleSignIn.signInSilently();  // 자동 로그인 기능
         print("결과: $user");
       }
 
@@ -59,27 +64,46 @@ class GoogleAuthRemoteDataSource {
   }
 
   Future<String> requestUserTokenFromServer(
-      String accessToken, String userId, String email, String nickname, String gender, String ageRange, String birthyear) async {
-    final url =
-    Uri.parse('$baseUrl/google-oauth/request-user-token'); // Django 서버 URL
+      String accessToken,
+      String userId,
+      String email,
+      String nickname,
+      String gender,
+      String ageRange,
+      String birthyear,
+      ) async {
+    final url = Uri.parse('$baseUrl/google-oauth/request-user-token'); // Django 서버 URL
     print('requestUserTokenFromServer url: $url');
 
     try {
       final response = await http.post(
         url,
         headers: {
-          'Content-Type': 'application/json', // Ensure Content-Type is set
+          'Content-Type': 'application/json', 
         },
         body: json.encode({
           'access_token': accessToken,
           'email': email,
           'nickname': nickname,
           'user_id': userId,
-          'gender': 'unknown',
-          'age_range': 'N/A',
-          'birthyear': '0000'
-          // 'account_path': 'Google',
-          // 'role_type': 'USER',
+          'gender': gender,               // 'unknown' 가능
+          'age_range': ageRange,          // 'N/A' 가능
+          'birthyear': birthyear,         // 예: '2000'
+          'birthday': '01-01',            // 임의로라도 기본값 필수 (예: 생일 모를 땐 '01-01')
+          'phone_num': '',
+          'address': '',
+          'payment': '',
+          'subscribed': false,
+          'name': nickname
+          // 'access_token': accessToken,
+          // 'email': email,
+          // 'nickname': nickname,
+          // 'user_id': userId,
+          // 'gender': 'unknown',
+          // 'age_range': 'N/A',
+          // 'birthyear': '0000'
+          // // 'account_path': 'Google',
+          // // 'role_type': 'USER',
         }),
       );
 
