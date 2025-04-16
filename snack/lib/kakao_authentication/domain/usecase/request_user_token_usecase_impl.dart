@@ -12,10 +12,8 @@ class RequestUserTokenUseCaseImpl implements RequestUserTokenUseCase {
     try {
       final userToken =
       await repository.requestUserToken(accessToken, email, nickname, accountPath, roleType);
-      print("User token obtained: $userToken");
       return userToken;
     } catch (error) {
-      print("Error while requesting user token: $error");
       throw Exception('Failed to request user token: $error');
     }
   }

@@ -28,19 +28,25 @@ class Board {
       print('JSON 변환 시작: $json');
 
       return Board(
-        id: json['id'],
-        title: json['title'],
-        content: json['content'],
-        imageUrl: json['image_url'],
-        author: json['author'],
-        createdAt: DateTime.parse(json['created_at']),
-        updatedAt: DateTime.parse(json['updated_at']),
-        endTime: DateTime.parse(json['end_time']),
-        status: json['status'],
-        restaurant: json['restaurant'],
+        id: json['board_id'] ?? json['id'],
+        title: json['title'] ?? '',
+        content: json['content'] ?? '',
+        imageUrl: json['image_url'] as String?,
+        author: json['author_nickname'] ?? json['author'] ?? '익명',
+        createdAt: json['created_at'] != null
+            ? DateTime.parse(json['created_at'])
+            : DateTime.now(),
+        updatedAt: json['updated_at'] != null
+            ? DateTime.parse(json['updated_at'])
+            : DateTime.now(),
+        endTime: json['end_time'] != null
+            ? DateTime.parse(json['end_time'])
+            : DateTime.now().add(Duration(hours: 1)),
+        status: json['status'] ?? 'ongoing',
+        restaurant: json['restaurant'] as String?,
       );
     } catch (e) {
-      print('JSON 파싱 중 오류: $json, Error: $e');
+      print('❌ JSON 파싱 중 오류: $json\nError: $e');
       rethrow;
     }
   }

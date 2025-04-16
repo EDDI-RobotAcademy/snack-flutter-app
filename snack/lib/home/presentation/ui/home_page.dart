@@ -24,7 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
-  String userEmail = "이메일을 불러오는 중...";
+  String userEmail = "";
   String userNickname = "";
 
   @override
@@ -38,9 +38,11 @@ class _HomePageState extends State<HomePage> {
       if (widget.loginType == "Kakao") {
         final kakaoProvider = Provider.of<KakaoAuthProvider>(context, listen: false);
         final userInfo = await kakaoProvider.fetchUserInfo();
+
+        if (!mounted) return;
         setState(() {
-          userEmail = userInfo.kakaoAccount?.email ?? "이메일 정보 없음";
-          userNickname = userInfo.kakaoAccount?.profile?.nickname ?? "닉네임 없음";
+          userEmail = userInfo.kakaoAccount?.email ?? "";
+          userNickname = userInfo.kakaoAccount?.profile?.nickname ?? "";
         });
       } else if (widget.loginType == "Naver") {
         // final naverProvider = Provider.of<NaverAuthProvider>(context, listen: false);
@@ -51,6 +53,7 @@ class _HomePageState extends State<HomePage> {
         // });
       }
     } catch (error) {
+      if (!mounted) return;
       setState(() {
         userEmail = "이메일 불러오기 실패";
         userNickname = "닉네임 불러오기 실패";

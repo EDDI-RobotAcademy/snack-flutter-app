@@ -37,7 +37,6 @@ class KakaoAuthRemoteDataSource {
       }
 
       // 백엔드 서버에 로그아웃 요청
-      print("📦 보낼 userToken: $userToken");
       final url = Uri.parse('$baseUrl/authentication/kakao-logout');
 
       final response = await http.post(
@@ -50,9 +49,8 @@ class KakaoAuthRemoteDataSource {
       );
 
       if (response.statusCode == 200) {
-        print("✅ 백엔드 로그아웃 성공");
       } else {
-        print("❌ 백엔드 로그아웃 실패: ${response.statusCode}, ${response.body}");
+        print("백엔드 로그아웃 실패: ${response.statusCode}, ${response.body}");
       }
 
     } catch (error) {
@@ -61,7 +59,7 @@ class KakaoAuthRemoteDataSource {
 
       // 특정 로그: 이미 로그아웃된 상태에서 재로그아웃 시 나오는 메시지 제거
       if (error.toString().contains("authentication token doesn't exist")) {
-        print('ℹ️ [무시됨] 이미 로그아웃된 상태입니다.');
+        print('로그아웃된 상태입니다.');
       } else {
         throw Exception("Kakao 로그아웃 실패: $error");
       }
@@ -84,8 +82,6 @@ class KakaoAuthRemoteDataSource {
       String nickname, String accountPath, String roleType) async {
     final url = Uri.parse('$baseUrl/kakao-oauth/request-user-token');
 
-    print('requestUserTokenFromServer url: $url');
-
     final requestData = json.encode({
       'access_token': accessToken,
       'email': email,
@@ -106,25 +102,17 @@ class KakaoAuthRemoteDataSource {
         body: requestData,
       );
 
-      print('Server response status: ${response.statusCode}');
-      print('Server response headers: ${response.headers}');
-      print('Server response body: ${response.body}');
-
       if (response.statusCode == 200) {
-        final userToken = response.headers['usertoken']; // ✅ 헤더에서 추출
+        final userToken = response.headers['usertoken'];
         if (userToken != null && userToken.isNotEmpty) {
-          print('✅ userToken from header: $userToken');
           return userToken;
         } else {
-          print('❌ 응답 헤더에 userToken 없음');
           return '';
         }
       } else {
-        print('❌ 서버 응답 실패. 상태 코드: ${response.statusCode}');
         return '';
       }
     } catch (error) {
-      print('❌ 서버 요청 중 에러: $error');
       return '';
     }
   }
