@@ -23,7 +23,7 @@ class LoginPage extends StatelessWidget {
             children: [
               // 로고
               Image.asset(
-                'assets/images/hungle_app_logo.png',
+                'assets/images/hungll_logo_long.png',
                 width: 180,
               ),
 
