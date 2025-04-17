@@ -31,6 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -55,6 +58,7 @@ dependencies:
   geolocator: ^13.0.2
   sensors_plus: ^6.1.1
   flutter_native_splash: ^2.4.4
+  flutter_riverpod: ^2.0.0
 #  kakao_map_plugin: ^0.3.2
   google_sign_in: ^6.3.0
 
@@ -93,6 +97,12 @@ flutter:
     - assets/images/home_icon.png
     - assets/images/mypage_icon.png
     - assets/images/alarm_icon.png
+    - assets/images/hungll_logo_kr.png
+    - assets/images/hungll_logo_long.png
+    - assets/images/hungll_logo_short.png
+    - assets/images/hungll_logo_simple.png
+    - assets/images/hungll_logo_simple_kr.png
+    - assets/images/hungll_logo_simple_wide.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
