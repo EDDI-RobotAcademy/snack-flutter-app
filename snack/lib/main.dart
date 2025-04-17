@@ -3,11 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'home/presentation/ui/home_page.dart';
 import 'authentication/presentation/ui/login_page.dart';
 import 'home/home_module.dart';
-
+import 'policy/agreement_page.dart';
+import 'package:snack/common_ui/logo_screen.dart';
 
 //카카오 로그인 관련 의존성 추가
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -69,20 +71,51 @@ void main() async {
   runApp(MyApp(baseUrl: baseServerUrl));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final String baseUrl;
+  const MyApp({super.key, required this.baseUrl});
 
-  const MyApp({
-    super.key,   // 이건 뭐냐
-    required this.baseUrl,
-  });
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  bool _showLogo = true;
+  bool _agreed = false; // ✅ 약관 동의 여부 상태
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadAgreementStatus();
+
+    // 앱 실행 후 3초 동안 로고 페이지 보여주고, 이후 약관 페이지로 이동
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        _showLogo = false;
+      });
+    });
+  }
+
+  Future<void> _loadAgreementStatus() async {
+    final agreed = await _storage.read(key: 'agreementAccepted');
+    setState(() {
+      _agreed = agreed == 'true';
+    });
+  }
+
+  Future<void> _saveAgreementStatus() async {
+    await _storage.write(key: 'agreementAccepted', value: 'true');
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<KakaoAuthRemoteDataSource>(
-            create: (_) => KakaoAuthRemoteDataSource(baseUrl)),
+            create: (_) => KakaoAuthRemoteDataSource(widget.baseUrl)),
         ProxyProvider<KakaoAuthRemoteDataSource, KakaoAuthRepository>(
           update: (_, remoteDataSource, __) =>
               KakaoAuthRepositoryImpl(remoteDataSource),
@@ -144,7 +177,7 @@ class MyApp extends StatelessWidget {
 
 
         Provider<GoogleAuthRemoteDataSource>(
-          create: (_) => GoogleAuthRemoteDataSource(baseUrl),
+          create: (_) => GoogleAuthRemoteDataSource(widget.baseUrl),
         ),
         ProxyProvider<GoogleAuthRemoteDataSource, GoogleAuthRepository>(
           update: (_, remoteDataSource, __) =>
@@ -215,14 +248,26 @@ class MyApp extends StatelessWidget {
           Locale('ko', 'KR'),
         ],
 
-        home: Consumer3<KakaoAuthProvider, NaverAuthProvider, GoogleAuthProvider>(
+
+        home: _showLogo
+            ? const LogoScreen()
+            : Consumer3<KakaoAuthProvider, NaverAuthProvider, GoogleAuthProvider>(
           builder: (context, kakaoProvider, naverProvider, googleProvider, child) {
             if (kakaoProvider.isLoggedIn) {
-              return HomePage(loginType: "Kakao");
+              return const HomePage(loginType: "Kakao");
             } else if (naverProvider.isLoggedIn) {
-              return HomePage(loginType: "Naver");
+              return const HomePage(loginType: "Naver");
             } else if (googleProvider.isLoggedIn) {
-              return HomePage(loginType: "Google");
+              return const HomePage(loginType: "Google");
+            } else if (!_agreed) {
+              return AgreementPage(
+                onAgreed: () async {
+                  await _saveAgreementStatus();
+                  setState(() {
+                    _agreed = true;
+                  });
+                },
+              );
             } else {
               return LoginPage();
             }
