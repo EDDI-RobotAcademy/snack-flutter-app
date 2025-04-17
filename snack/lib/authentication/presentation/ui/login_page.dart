@@ -4,6 +4,7 @@ import 'package:snack/naver_authentication/presentation/providers/naver_auth_pro
 import 'package:snack/kakao_authentication/presentation/providers/kakao_auth_providers.dart';
 import '../../../google_authentication/presentation/providers/google_auth_providers.dart';
 import '../../../home/home_module.dart';
+import '../../../kakao_authentication/presentation/ui/kakao_login_webview_page.dart';
 import '../../../naver_authentication/presentation/ui/naver_login_webview_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -33,16 +34,12 @@ class LoginPage extends StatelessWidget {
               Consumer<KakaoAuthProvider>(
                 builder: (context, kakaoProvider, child) {
                   return GestureDetector(
-                    onTap: kakaoProvider.isLoading
-                        ? null
-                        : () async {
-                      await kakaoProvider.login();
-                      if (kakaoProvider.isLoggedIn) {
-                        Navigator.pushReplacement(
-                          context,
-                          HomeModule.getHomeRoute(loginType: "Kakao"),
-                        );
-                      }
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const KakaoLoginWebViewPage()),
+                      );
                     },
                     child: Image.asset(
                       'assets/images/kakao_login.png',
@@ -63,7 +60,8 @@ class LoginPage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const NaverLoginWebViewPage()),
+                        MaterialPageRoute(
+                            builder: (_) => const NaverLoginWebViewPage()),
                       );
                     },
                     child: Image.asset(
@@ -85,14 +83,14 @@ class LoginPage extends StatelessWidget {
                     onTap: googleProvider.isLoading
                         ? null
                         : () async {
-                      await googleProvider.login();
-                      if (googleProvider.isLoggedIn) {
-                        Navigator.pushReplacement(
-                          context,
-                          HomeModule.getHomeRoute(loginType: "Google"),
-                        );
-                      }
-                    },
+                            await googleProvider.login();
+                            if (googleProvider.isLoggedIn) {
+                              Navigator.pushReplacement(
+                                context,
+                                HomeModule.getHomeRoute(loginType: "Google"),
+                              );
+                            }
+                          },
                     child: Image.asset(
                       'assets/images/google_login.png',
                       width: 200,

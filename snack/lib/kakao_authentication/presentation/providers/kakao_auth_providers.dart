@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:snack/kakao_authentication/domain/usecase/login_usecase.dart';
 import 'package:snack/kakao_authentication/domain/usecase/logout_usecase.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../domain/usecase/fetch_user_info_usecase.dart';
 import '../../domain/usecase/request_user_token_usecase.dart';
-
 
 class KakaoAuthProvider with ChangeNotifier {
   final LoginUseCase loginUseCase;
@@ -27,13 +27,13 @@ class KakaoAuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String get message => _message;
 
-
   KakaoAuthProvider({
     required this.loginUseCase,
     required this.logoutUseCase,
     required this.fetchUserInfoUseCase,
     required this.requestUserTokenUseCase,
-  }) { _initAuthState();
+  }) {
+    _initAuthState();
   }
 
   Future<void> _initAuthState() async {
@@ -50,7 +50,6 @@ class KakaoAuthProvider with ChangeNotifier {
     }
   }
 
-
   Future<void> login() async {
     _isLoading = true;
     _message = '';
@@ -66,7 +65,8 @@ class KakaoAuthProvider with ChangeNotifier {
       final accountPath = "Kakao";
       final roleType = "USER";
 
-      print("👤 유저 정보 → 닉네임: $nickname, 이메일: $email, 로그인 경로: $accountPath, 권한 타입: $roleType");
+      print(
+          "👤 유저 정보 → 닉네임: $nickname, 이메일: $email, 로그인 경로: $accountPath, 권한 타입: $roleType");
 
       _userToken = await requestUserTokenUseCase.execute(
           _accessToken!, email!, nickname!, accountPath, roleType);
@@ -96,6 +96,14 @@ class KakaoAuthProvider with ChangeNotifier {
     }
   }
 
+  Future<void> setToken(String token) async {
+    _userToken = token;
+    _isLoggedIn = true;
+
+    await secureStorage.write(key: 'userToken', value: _userToken);
+
+    notifyListeners();
+  }
 
   // 로그아웃 처리
   Future<void> logout() async {
@@ -113,7 +121,6 @@ class KakaoAuthProvider with ChangeNotifier {
       _accessToken = null;
       _userToken = null;
       _message = 'Kakao 로그아웃 완료';
-
     } catch (e) {
       _message = "Kakao 로그아웃 실패: $e";
     } finally {
