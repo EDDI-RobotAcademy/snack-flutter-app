@@ -6,6 +6,7 @@ import '../../../google_authentication/presentation/providers/google_auth_provid
 import '../../../home/home_module.dart';
 import '../../../kakao_authentication/presentation/ui/kakao_login_webview_page.dart';
 import '../../../naver_authentication/presentation/ui/naver_login_webview_page.dart';
+import '../../../google_authentication/presentation/ui/google_login_webview_page.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -80,17 +81,24 @@ class LoginPage extends StatelessWidget {
               Consumer<GoogleAuthProvider>(
                 builder: (context, googleProvider, child) {
                   return GestureDetector(
-                    onTap: googleProvider.isLoading
-                        ? null
-                        : () async {
-                            await googleProvider.login();
-                            if (googleProvider.isLoggedIn) {
-                              Navigator.pushReplacement(
-                                context,
-                                HomeModule.getHomeRoute(loginType: "Google"),
-                              );
-                            }
-                          },
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const GoogleLoginWebViewPage()),
+                      );
+                    },
+                    // onTap: googleProvider.isLoading
+                    //     ? null
+                    //     : () async {
+                    //         await googleProvider.login();
+                    //         if (googleProvider.isLoggedIn) {
+                    //           Navigator.pushReplacement(
+                    //             context,
+                    //             HomeModule.getHomeRoute(loginType: "Google"),
+                    //           );
+                    //         }
+                    //       },
                     child: Image.asset(
                       'assets/images/google_login.png',
                       width: 200,
