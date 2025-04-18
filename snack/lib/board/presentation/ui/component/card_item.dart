@@ -1,89 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:snack/board/domain/entity/board.dart';
+import 'package:intl/intl.dart';
 
 class CardItem extends StatelessWidget {
   final Board board;
-  const CardItem({super.key, required this.board});
+
+  const CardItem({Key? key, required this.board}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 썸네일 이미지 or 회색 박스
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: board.imageUrl != null && board.imageUrl!.isNotEmpty
-                    ? null
-                    : Colors.grey[300],
-                borderRadius: BorderRadius.circular(8),
-                image: board.imageUrl != null && board.imageUrl!.isNotEmpty
-                    ? DecorationImage(
-                  image: NetworkImage(board.imageUrl!),
-                  fit: BoxFit.cover,
-                )
-                    : null,
-              ),
-              child: board.imageUrl == null || board.imageUrl!.isEmpty
-                  ? const Center(
-                child: Text(
-                  "IMAGE",
-                  style: TextStyle(
-                    color: Colors.black45,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
-                  : null,
-            ),
-            const SizedBox(width: 16),
+    final isClosed = board.status == 'closed' || board.endTime.isBefore(DateTime.now());
+    final formattedDeadline = DateFormat('yyyy-MM-dd HH:mm').format(board.endTime.toLocal());
 
-            // 오른쪽 텍스트 정보
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    board.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Icon(Icons.schedule, size: 14, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        "마감일: ${board.endTime.toLocal()}",
-                        style: const TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Icon(Icons.person, size: 14, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        "작성자: ${board.author}",
-                        style: const TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
+    return Opacity(
+      opacity: isClosed ? 0.4 : 1.0,
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                board.title,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text('작성자: ${board.author}'),
+              Text('모집상태: ${board.status == 'closed' || board.endTime.isBefore(DateTime.now()) ? '모집완료' : '모집중'}'),
+              Text('마감일: $formattedDeadline'),
+            ],
+          ),
         ),
       ),
     );
