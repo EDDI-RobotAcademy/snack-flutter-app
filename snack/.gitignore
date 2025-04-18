@@ -49,3 +49,6 @@ ios/Runner.xcodeproj/project.pbxproj
 
 # Android NDK 및 빌드 캐시
 android/app/.cxx/
+
+**/Info.plist
+ios/Runner/Info.plist
