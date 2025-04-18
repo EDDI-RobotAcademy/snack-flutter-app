@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
@@ -59,6 +61,7 @@ class GoogleAuthProvider with ChangeNotifier {
   // Google 로그인 → 사용자 정보 요청 → 서버에 userToken 요청 → 저장 및 로그인 상태 업데이트
   Future<void> login() async {
     _isLoading = true;
+    _message = '';
     notifyListeners();  // UI에 상태 변경 알림
 
     try {
@@ -93,6 +96,15 @@ class GoogleAuthProvider with ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> setToken(String token) async {
+    _userToken = token;
+    _isLoggedIn = true;
+
+    await secureStorage.write(key: 'userToken', value: _userToken);
+
+    notifyListeners();
   }
 
   Future<GoogleSignInAccount?> fetchUserInfo() async {
