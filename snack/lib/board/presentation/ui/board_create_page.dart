@@ -60,29 +60,44 @@ class _BoardCreatePageState extends State<BoardCreatePage> {
               const Text('모집 마감일시'),
               ElevatedButton(
                 onPressed: () async {
-                  final picked = await showDatePicker(
+                  final pickedDate = await showDatePicker(
                     context: context,
                     initialDate: DateTime.now().add(const Duration(days: 1)),
                     firstDate: DateTime.now(),
                     lastDate: DateTime.now().add(const Duration(days: 365)),
                   );
 
-                  if (picked != null) {
-                    setState(() {
-                      _endTime = picked;
-                    });
+                  if (pickedDate != null) {
+                    final pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay(hour: 12, minute: 0),
+                    );
+
+                    if (pickedTime != null) {
+                      final fullDateTime = DateTime(
+                        pickedDate.year,
+                        pickedDate.month,
+                        pickedDate.day,
+                        pickedTime.hour,
+                        pickedTime.minute,
+                      );
+                      setState(() {
+                        _endTime = fullDateTime;
+                      });
+                    }
                   }
                 },
-                child: Text(_endTime == null
-                    ? '날짜 선택'
-                    : DateFormat('yyyy-MM-dd').format(_endTime!)),
+                child: Text(
+                  _endTime == null
+                      ? '날짜 선택'
+                      : DateFormat('yyyy-MM-dd HH:mm').format(_endTime!),
+                ),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate() && _endTime != null) {
-                    final userToken =
-                        await storage.read(key: 'userToken') ?? '';
+                    final userToken = await storage.read(key: 'userToken') ?? '';
                     if (userToken.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('유저 토큰이 없습니다.')),
