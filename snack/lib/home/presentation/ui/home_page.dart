@@ -39,12 +39,14 @@ class _HomePageState extends State<HomePage> {
     try {
       if (widget.loginType == "Kakao") {
         final kakaoProvider = Provider.of<KakaoAuthProvider>(context, listen: false);
-        final userInfo = await kakaoProvider.fetchUserInfo();
+        //final userInfo = await kakaoProvider.fetchUserInfo();
 
         if (!mounted) return;
         setState(() {
-          userEmail = userInfo.kakaoAccount?.email ?? "";
-          userNickname = userInfo.kakaoAccount?.profile?.nickname ?? "";
+          // userEmail = userInfo.kakaoAccount?.email ?? "";
+          // userNickname = userInfo.kakaoAccount?.profile?.nickname ?? "";
+          userEmail = kakaoProvider.email ?? "";
+          userNickname = kakaoProvider.nickname ?? "";
         });
       } else if (widget.loginType == "Naver") {
         // final naverProvider = Provider.of<NaverAuthProvider>(context, listen: false);

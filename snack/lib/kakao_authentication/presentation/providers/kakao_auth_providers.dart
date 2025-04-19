@@ -22,10 +22,14 @@ class KakaoAuthProvider with ChangeNotifier {
   bool _isLoggedIn = false;
   bool _isLoading = false;
   String _message = '';
+  String _nickname = '';
+  String _email = '';
 
   bool get isLoggedIn => _isLoggedIn;
   bool get isLoading => _isLoading;
   String get message => _message;
+  String get nickname => _nickname;
+  String get email => _email;
 
   KakaoAuthProvider({
     required this.loginUseCase,
@@ -91,7 +95,7 @@ class KakaoAuthProvider with ChangeNotifier {
       final userInfo = await fetchUserInfoUseCase.execute();
       return userInfo;
     } catch (e) {
-      print("Kakao 사용자 정보 불러오기 실패: $e");
+      print("KakaoSDK 사용자 정보 불러오기 실패: $e");
       rethrow;
     }
   }
@@ -104,6 +108,13 @@ class KakaoAuthProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  void setUserInfo(String email, String nickname) {
+    _email = email;
+    _nickname = nickname;
+    notifyListeners();
+  }
+
 
   // 로그아웃 처리
   Future<void> logout() async {

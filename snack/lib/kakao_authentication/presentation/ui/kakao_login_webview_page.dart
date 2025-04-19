@@ -42,16 +42,22 @@ class _KakaoLoginWebViewPageState extends State<KakaoLoginWebViewPage> {
           onNavigationRequest: (request) async {
             final url = request.url;
             debugPrint("🔍 Navigating to: $url");
-
+                // django에서 보낸 유저 토큰 감지
             if (url.startsWith('flutter://kakao-login-success')) {
               final uri = Uri.parse(url);
               final userToken = uri.queryParameters['userToken'];
+              final email = uri.queryParameters['email'];
+              final nickname = uri.queryParameters['nickname'];
+
               debugPrint("✅ userToken: $userToken");
+              debugPrint("✅ nickname: $nickname");
+
 
               if (userToken != null && context.mounted) {
                 final provider =
-                    Provider.of<KakaoAuthProvider>(context, listen: false);
+                Provider.of<KakaoAuthProvider>(context, listen: false);
                 await provider.setToken(userToken);
+                provider.setUserInfo(email ?? '', nickname ?? '');
 
                 Navigator.pushReplacement(
                   context,
