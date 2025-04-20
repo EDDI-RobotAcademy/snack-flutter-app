@@ -81,24 +81,24 @@ class LoginPage extends StatelessWidget {
               Consumer<GoogleAuthProvider>(
                 builder: (context, googleProvider, child) {
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => const GoogleLoginWebViewPage()),
-                      );
-                    },
-                    // onTap: googleProvider.isLoading
-                    //     ? null
-                    //     : () async {
-                    //         await googleProvider.login();
-                    //         if (googleProvider.isLoggedIn) {
-                    //           Navigator.pushReplacement(
-                    //             context,
-                    //             HomeModule.getHomeRoute(loginType: "Google"),
-                    //           );
-                    //         }
-                    //       },
+                    // onTap: () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (_) => const GoogleLoginWebViewPage()),
+                    //   );
+                    // },
+                    onTap: googleProvider.isLoading
+                        ? null
+                        : () async {
+                            await googleProvider.login();
+                            if (googleProvider.isLoggedIn) {
+                              Navigator.pushReplacement(
+                                context,
+                                HomeModule.getHomeRoute(loginType: "Google"),
+                              );
+                            }
+                          },
                     child: Image.asset(
                       'assets/images/google_login.png',
                       width: 200,
