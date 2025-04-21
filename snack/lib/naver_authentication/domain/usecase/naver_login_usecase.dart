@@ -1,3 +1,3 @@
-abstract class NaverLoginUseCase {
-  Future<String> execute();
-}
+// abstract class NaverLoginUseCase {
+//   Future<String> execute();
+// }

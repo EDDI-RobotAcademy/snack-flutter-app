@@ -171,10 +171,18 @@ class _MyAppState extends State<MyApp> {
         //     requestUserTokenUseCase: context.read<NaverRequestUserTokenUseCaseImpl>(),
         //   ),
         // ),
-        ChangeNotifierProvider<NaverAuthProvider>(
-          create: (_) => NaverAuthProvider(),
-        ),
+        // ChangeNotifierProvider<NaverAuthProvider>(
+        //   create: (_) => NaverAuthProvider(),
+        // ),
 
+        Provider<NaverAuthRemoteDataSource>(
+          create: (_) => NaverAuthRemoteDataSource(widget.baseUrl),
+        ),
+        ChangeNotifierProvider<NaverAuthProvider>(
+          create: (context) => NaverAuthProvider(
+            remoteDataSource: context.read<NaverAuthRemoteDataSource>(),
+          ),
+        ),
 
         Provider<GoogleAuthRemoteDataSource>(
           create: (_) => GoogleAuthRemoteDataSource(widget.baseUrl),
