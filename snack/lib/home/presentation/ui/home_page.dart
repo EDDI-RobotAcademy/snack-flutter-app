@@ -39,12 +39,14 @@ class _HomePageState extends State<HomePage> {
     try {
       if (widget.loginType == "Kakao") {
         final kakaoProvider = Provider.of<KakaoAuthProvider>(context, listen: false);
-        final userInfo = await kakaoProvider.fetchUserInfo();
+        //final userInfo = await kakaoProvider.fetchUserInfo();
 
         if (!mounted) return;
         setState(() {
-          userEmail = userInfo.kakaoAccount?.email ?? "";
-          userNickname = userInfo.kakaoAccount?.profile?.nickname ?? "";
+          // userEmail = userInfo.kakaoAccount?.email ?? "";
+          // userNickname = userInfo.kakaoAccount?.profile?.nickname ?? "";
+          userEmail = kakaoProvider.email ?? "";
+          userNickname = kakaoProvider.nickname ?? "";
         });
       } else if (widget.loginType == "Naver") {
         // final naverProvider = Provider.of<NaverAuthProvider>(context, listen: false);
@@ -74,6 +76,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _logout() async {
+    print("로그아웃을 시작합니다");
     if (widget.loginType == "Kakao") {
       final kakaoRemote = Provider.of<KakaoAuthRemoteDataSource>(context, listen: false);
       final kakaoProvider = Provider.of<KakaoAuthProvider>(context, listen: false);
@@ -96,7 +99,7 @@ class _HomePageState extends State<HomePage> {
       final googleProvider = Provider.of<GoogleAuthProvider>(context, listen: false);
       await googleProvider.logout();
     }
-
+    print("로그아웃을 종료합니다.");
 
     // 로그아웃 이후 로그인 페이지 이동 pushAndRemoveUntil->앱 흐름 초기화
     Navigator.pushAndRemoveUntil(

@@ -78,8 +78,13 @@ class KakaoAuthRemoteDataSource {
     }
   }
 
-  Future<String> requestUserTokenFromServer(String accessToken, String email,
-      String nickname, String accountPath, String roleType) async {
+  Future<String> requestUserTokenFromServer(
+      String accessToken,
+      String email,
+      String nickname,
+      String accountPath,
+      String roleType,
+      ) async {
     final url = Uri.parse('$baseUrl/kakao-oauth/request-user-token');
 
     final requestData = json.encode({

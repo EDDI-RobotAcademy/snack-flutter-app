@@ -130,6 +130,8 @@ class GoogleAuthProvider with ChangeNotifier {
       _userToken = null;
       _message = '로그아웃 완료';
 
+      print("AA1로그 아웃 완료");
+
       await _initAuthState();    // 로그아웃 후 상태 상태 초기화
     } catch (e) {
       _message = "로그아웃 실패: $e";

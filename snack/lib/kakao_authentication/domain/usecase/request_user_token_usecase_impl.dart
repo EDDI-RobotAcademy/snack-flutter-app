@@ -8,7 +8,12 @@ class RequestUserTokenUseCaseImpl implements RequestUserTokenUseCase {
 
   @override
   Future<String> execute(
-      String accessToken, String email, String nickname, String accountPath, String roleType) async {
+      String accessToken,
+      String email,
+      String nickname,
+      String accountPath,
+      String roleType,
+      ) async {
     try {
       final userToken =
       await repository.requestUserToken(accessToken, email, nickname, accountPath, roleType);
