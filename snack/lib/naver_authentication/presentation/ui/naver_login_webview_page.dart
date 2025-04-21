@@ -47,11 +47,14 @@ class _NaverLoginWebViewPageState extends State<NaverLoginWebViewPage> {
             if (url.startsWith('flutter://naver-login-success')) {
               final uri = Uri.parse(url);
               final userToken = uri.queryParameters['userToken'];
+              final email = uri.queryParameters['email'];
+              final nickname = uri.queryParameters['nickname'];
               debugPrint("✅ userToken: $userToken");
 
               if (userToken != null && context.mounted) {
                 final provider = Provider.of<NaverAuthProvider>(context, listen: false);
                 await provider.setToken(userToken);
+                provider.setUserInfo(email ?? '', nickname ?? '');
 
                 Navigator.pushReplacement(
                   context,
@@ -147,3 +150,5 @@ class _NaverLoginWebViewPageState extends State<NaverLoginWebViewPage> {
 //     );
 //   }
 // }
+
+
